@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-calculator-deployment
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-calculator
+  template:
+    spec:
+      serviceAccountName: simple-calculator-pod
+      containers:
+        - name: simple-calculator-service
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/simple-calculator:latest
+          ports:
+            - containerPort: 9001
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+    metadata:
+      labels:
+        app: simple-calculator
+        
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  
+  name: simple-calculator-service
+spec:
+  ports:
+    - name: simple-calculator-service-port
+      port: 9001
+      targetPort: 9001
+  selector:
+    app: simple-calculator
+    
+---

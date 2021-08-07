@@ -1,0 +1,22 @@
+{
+  "name": "SimpleCalculatorService",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-server-dev": "nodemon ./src/server.js",
+    "start-server": "node ./src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-xray-sdk": "^3.3.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "joi": "^17.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

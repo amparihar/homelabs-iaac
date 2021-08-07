@@ -1,0 +1,158 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: simple-calculator-vn
+  
+spec:
+  podSelector:
+    matchLabels:
+      app: simple-calculator
+  listeners:
+    - portMapping:
+        port: 9001
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/api/calculator/ping'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  serviceDiscovery:
+    dns:
+      hostname: simple-calculator-service.development.svc.cluster.local
+      
+---
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: simple-calculator-vs
+  
+spec:
+  awsName: simple-calculator-service.development.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: simple-calculator-vr
+        
+---
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  
+  name: simple-calculator-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9001
+        protocol: http
+  routes:
+    - name: simple-calculator-route
+      httpRoute:
+        match:
+          prefix: /api/calculator
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: simple-calculator-vn
+              weight: 1
+
+---
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: ingress-vgw
+  
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: ingress-gw
+  podSelector:
+    matchLabels:
+      app: ingress-envoy
+  gatewayRouteSelector:
+    matchLabels:
+      gateway: ingress-gw
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+  
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-svc
+  
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "120"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: ingress-envoy
+    
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-proxy-ingress-deployment
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-envoy
+  template:
+    metadata:
+      labels:
+        app: ingress-envoy
+    spec:
+      serviceAccountName: simple-calculator-pod
+      containers:
+        - name: envoy
+          image: 840364872350.dkr.ecr.ap-south-1.amazonaws.com/aws-appmesh-envoy:v1.18.3.0-prod
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            
+---
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: ingress-gateway-route
+  labels:
+    gateway: ingress-gw
+spec:
+  httpRoute:
+    match:
+      prefix: "/"
+    action:
+      # rewrite:
+      #   hostname:
+      #     defaultTargetHostname: ENABLED
+      #   prefix:
+      #     defaultPrefix: DISABLED
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: simple-calculator-vs
+            
+---

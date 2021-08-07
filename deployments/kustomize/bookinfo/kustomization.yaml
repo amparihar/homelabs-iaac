@@ -1,0 +1,9 @@
+resources:
+  - namespace.yaml
+  - hpa.yaml
+  - service_account.yaml
+  - gateway.yaml
+  - base_app.yaml
+  - meshed_app.yaml
+  
+namespace: calculator
