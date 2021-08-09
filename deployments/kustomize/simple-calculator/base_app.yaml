@@ -13,7 +13,7 @@ spec:
       serviceAccountName: simple-calculator-pod
       containers:
         - name: simple-calculator-service
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/simple-calculator:latest
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:simple-calculator-microsvc
           ports:
             - containerPort: 9001
           resources:
