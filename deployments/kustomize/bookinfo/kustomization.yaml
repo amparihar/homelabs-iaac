@@ -6,4 +6,4 @@ resources:
   - base_app.yaml
   - meshed_app.yaml
   
-namespace: calculator
+namespace: bookinfo

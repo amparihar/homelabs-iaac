@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bookinfo
+  labels:
+    mesh: bookinfo-mesh
+    gateway: ingress-gw
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: bookinfo-app-mesh
+spec:
+  egressFilter:
+    type: "ALLOW_ALL"
+  namespaceSelector:
+    matchLabels:
+      mesh: bookinfo-mesh
+---
