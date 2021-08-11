@@ -1,6 +1,6 @@
 locals {
   name_suffix = "${var.app_name}-${var.stage_name}"
-  subnet_ids  = concat(var.private_networking ? [] : var.public_subnet_ids, var.private_subnet_ids)
+  subnet_ids  = concat((var.private_networking ? [] : var.public_subnet_ids), var.private_subnet_ids)
 }
 resource "aws_eks_cluster" "main" {
   name = var.cluster_name

@@ -12,7 +12,7 @@ Change into the eks directory and create the EKS cluster infrastructure.
 cd eks
 terraform init
 terraform validate
-terraform plan -out <FILENAME1> -var=cluster_name=<CLUSTERNAME>
+terraform plan -out <FILENAME1> -var-file=<FILENAME>
 terraform apply <FILENAME1>
 
 2. Create eks addon resource
@@ -33,4 +33,4 @@ cd eks-addons
 terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> 
 
 cd eks
-terraform destroy -var=cluster_name=<CLUSTERNAME>
+terraform destroy -var-file=<FILENAME>

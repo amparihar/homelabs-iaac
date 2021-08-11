@@ -36,6 +36,7 @@ module "security-groups" {
   stage_name                 = var.stage_name
   create_vpc                 = module.vpc.create_vpc
   vpcid                      = module.vpc.vpcid[0]
+  public_subnets             = var.public_subnets
   private_subnets            = var.private_subnets
   private_networking         = var.private_networking
   envoy_proxy_container_port = 8080

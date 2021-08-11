@@ -39,9 +39,29 @@ metadata:
 spec:
   awsName: productpage.bookinfo.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
-        name: productpage-vn
+    virtualRouter:
+      virtualRouterRef:
+        name: productpage-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: productpage-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: productpage-vn
+              weight: 100
 ---
 ##################################################################################################
 # Details
