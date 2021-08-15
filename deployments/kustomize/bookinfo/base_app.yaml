@@ -117,7 +117,7 @@ spec:
               memory: 200Mi
             requests:
               cpu: 100m
-              memory: 200Mi
+              memory: 100Mi
 ---
 ##################################################################################################
 # Reviews 
@@ -200,7 +200,7 @@ spec:
           resources:
             limits:
               cpu: 200m
-              memory: 200Mi
+              memory: 300Mi
             requests:
               cpu: 100m
               memory: 200Mi
@@ -245,7 +245,7 @@ spec:
           resources:
             limits:
               cpu: 200m
-              memory: 200Mi
+              memory: 300Mi
             requests:
               cpu: 100m
               memory: 200Mi
@@ -290,7 +290,7 @@ spec:
           resources:
             limits:
               cpu: 200m
-              memory: 200Mi
+              memory: 300Mi
             requests:
               cpu: 100m
               memory: 200Mi
@@ -339,7 +339,7 @@ spec:
             - containerPort: 9080
           env:
             - name: MYSQL_DB_HOST
-              value: mysqldb
+              value: localdb
             - name: MYSQL_DB_PORT
               value: "3306"
             - name: MYSQL_DB_USER
@@ -353,7 +353,7 @@ spec:
           resources:
             limits:
               cpu: 200m
-              memory: 200Mi
+              memory: 300Mi
             requests:
               cpu: 100m
               memory: 200Mi
@@ -395,14 +395,14 @@ spec:
             - name: MYSQL_PASSWORD
               value: P@ssw0rd
             - name: DATABASE_HOST
-              value: mysqldb
+              value: localdb
           # resources:
           #   limits:
           #     cpu: 300m
-          #     memory: 300Mi
+          #     memory: 750Mi
           #   requests:
           #     cpu: 200m
-          #     memory: 300Mi
+          #     memory: 512Mi
 ---
 apiVersion: v1
 kind: Service

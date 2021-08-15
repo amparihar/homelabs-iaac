@@ -20,7 +20,7 @@ spec:
         intervalMillis: 5000
   serviceDiscovery:
     dns:
-      hostname: simple-calculator-service.development.svc.cluster.local
+      hostname: simple-calculator-service.calculator.svc.cluster.local
       
 ---
 
@@ -30,7 +30,7 @@ metadata:
   name: simple-calculator-vs
   
 spec:
-  awsName: simple-calculator-service.development.svc.cluster.local
+  awsName: simple-calculator-service.calculator.svc.cluster.local
   provider:
     virtualRouter:
       virtualRouterRef:

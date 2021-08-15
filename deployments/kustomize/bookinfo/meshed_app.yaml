@@ -1,67 +1,40 @@
-##################################################################################################
-# Productpage
-##################################################################################################
 ---
+##################################################################################################
+# database
+##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: productpage-vn
+  name: mysql-vn
 spec:
   podSelector:
     matchLabels:
-      app: productpage
+      app: mysql
   listeners:
     - portMapping:
-        port: 9080
+        port: 3306
         protocol: http
-      healthCheck:
-        protocol: http
-        path: '/health'
-        healthyThreshold: 2
-        unhealthyThreshold: 2
-        timeoutMillis: 2000
-        intervalMillis: 10000
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: details-vs
-    - virtualService:
-        virtualServiceRef:
-          name: reviews-vs
+      # healthCheck:
+      #   protocol: http
+      #   path: '/health'
+      #   healthyThreshold: 2
+      #   unhealthyThreshold: 2
+      #   timeoutMillis: 2000
+      #   intervalMillis: 10000
   serviceDiscovery:
     dns:
-      hostname: productpage.bookinfo.svc.cluster.local
+      hostname: mysql.bookinfo.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: productpage-vs
+  name: mysql-vs
 spec:
-  awsName: productpage.bookinfo.svc.cluster.local
+  awsName: mysql.bookinfo.svc.cluster.local
   provider:
-    virtualRouter:
-      virtualRouterRef:
-        name: productpage-vr
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualRouter
-metadata:
-  name: productpage-vr
-spec:
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-  routes:
-    - name: index-route
-      httpRoute:
-        match:
-          prefix: /
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: productpage-vn
-              weight: 100
+    virtualNode:
+      virtualNodeRef:
+        name: mysql-vn
 ---
 ##################################################################################################
 # Details
@@ -101,46 +74,49 @@ spec:
         name: details-vn
 ---
 ##################################################################################################
-# Reviews v1
+# Ratings
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
+kind: VirtualNode
 metadata:
-  name: reviews-vs
+  name: ratings-vn
 spec:
-  awsName: reviews.bookinfo.svc.cluster.local
-  provider:
-    virtualRouter:
-      virtualRouterRef:
-        name: reviews-vr
----
-# Canary
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualRouter
-metadata:
-  name: reviews-vr
-spec:
+  podSelector:
+    matchLabels:
+      app: ratings
   listeners:
     - portMapping:
         port: 9080
         protocol: http
-  routes:
-    - name: reviews-route
-      httpRoute:
-        match:
-          prefix: /
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: reviews-v1-vn
-              weight: 20
-            - virtualNodeRef:
-                name: reviews-v2-vn
-              weight: 40
-            - virtualNodeRef:
-                name: reviews-v3-vn
-              weight: 40
+      healthCheck:
+        protocol: http
+        path: '/health'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: mysql-vs
+  serviceDiscovery:
+    dns:
+      hostname: ratings.bookinfo.svc.cluster.local
 ---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: ratings-vs
+spec:
+  awsName: ratings.bookinfo.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: ratings-vn
+---
+##################################################################################################
+# Reviews v1
+##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
@@ -228,16 +204,57 @@ spec:
       hostname: reviews-v3.bookinfo.svc.cluster.local
 ---
 ##################################################################################################
-# Ratings
+# Reviews vservice
+##################################################################################################
+# Canary
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: reviews-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: reviews-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: reviews-v1-vn
+              weight: 100
+            - virtualNodeRef:
+                name: reviews-v2-vn
+              weight: 0
+            - virtualNodeRef:
+                name: reviews-v3-vn
+              weight: 0
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: reviews-vs
+spec:
+  awsName: reviews.bookinfo.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: reviews-vr
+---
+##################################################################################################
+# Productpage
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: ratings-vn
+  name: productpage-vn
 spec:
   podSelector:
     matchLabels:
-      app: ratings
+      app: productpage
   listeners:
     - portMapping:
         port: 9080
@@ -252,58 +269,47 @@ spec:
   backends:
     - virtualService:
         virtualServiceRef:
-          name: mysql-vs
+          name: details-vs
+    - virtualService:
+        virtualServiceRef:
+          name: reviews-vs
+    - virtualService:
+        virtualServiceRef:
+          name: ratings-vs
   serviceDiscovery:
     dns:
-      hostname: ratings.bookinfo.svc.cluster.local
+      hostname: productpage.bookinfo.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: ratings-vs
+  name: productpage-vs
 spec:
-  awsName: ratings.bookinfo.svc.cluster.local
+  awsName: productpage.bookinfo.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
-        name: ratings-vn
+    virtualRouter:
+      virtualRouterRef:
+        name: productpage-vr
 ---
-##################################################################################################
-# mysql
-##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualNode
+kind: VirtualRouter
 metadata:
-  name: mysql-vn
+  name: productpage-vr
 spec:
-  podSelector:
-    matchLabels:
-      app: mysql
   listeners:
     - portMapping:
-        port: 3306
+        port: 9080
         protocol: http
-      # healthCheck:
-      #   protocol: http
-      #   path: '/health'
-      #   healthyThreshold: 2
-      #   unhealthyThreshold: 2
-      #   timeoutMillis: 2000
-      #   intervalMillis: 10000
-  serviceDiscovery:
-    dns:
-      hostname: mysql.bookinfo.svc.cluster.local
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
-metadata:
-  name: mysql-vs
-spec:
-  awsName: mysql.bookinfo.svc.cluster.local
-  provider:
-    virtualNode:
-      virtualNodeRef:
-        name: mysql-vn
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: productpage-vn
+              weight: 100
 ---
 ##################################################################################################
 # GatewayRoute
@@ -322,5 +328,3 @@ spec:
           virtualServiceRef:
             name: productpage-vs
 ---
-
-  
