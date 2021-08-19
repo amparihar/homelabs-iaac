@@ -1,0 +1,382 @@
+---
+##################################################################################################
+# config/secret
+##################################################################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-config
+data:
+  JWT_ACCESS_TOKEN: ""
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  USER_API_BASE_URL: "http://user.todos.svc.cluster.local:4096/api"
+  GROUP_API_BASE_URL: "http://group.todos.svc.cluster.local:5096/api"
+  TASK_API_BASE_URL: "http://task.todos.svc.cluster.local:6096/api"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-connection-secret
+# unstructured arbitrary key/value pairs, default
+#type: Opaque
+data:
+  RDS_PORT: MzMwNg==
+  RDS_DB_NAME: dG9kb3NkYg==
+  RDS_USERNAME: YWRtaW4=
+  RDS_PASSWORD: UGFzc3dvcmQxMjM=
+  RDS_ROOT_PASSWORD: UGFzc3dvcmQxMjM=
+---
+##################################################################################################
+# frontend
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: frontend
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mytodos-microsvc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: USER_API_BASE_URL
+              valueFrom: 
+                configMapKeyRef:
+                  name: frontend-config
+                  key: USER_API_BASE_URL
+            - name: GROUP_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: GROUP_API_BASE_URL
+            - name: TASK_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: TASK_API_BASE_URL
+          resources:
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 200m
+              memory: 512Mi
+---
+##################################################################################################
+# user service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+spec:
+  ports:
+    - port: 4096
+  selector:
+    app: user
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: user
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: user
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:user-microsvc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4096
+          env:
+            - name: RDS_HOST
+              value: mysql.todos.svc.cluster.local
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: JWT_ACCESS_TOKEN
+          resources:
+            limits:
+              cpu: 256m
+              memory: 512Mi
+            requests:
+              cpu: 256m
+              memory: 300Mi
+---
+##################################################################################################
+# group service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: group
+spec:
+  ports:
+    - port: 5096
+  selector:
+    app: group
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: group
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: group
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: group
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: group
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:group-microsvc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5096
+          env:
+            - name: RDS_HOST
+              value: mysql.todos.svc.cluster.local
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: JWT_ACCESS_TOKEN
+          resources:
+            limits:
+              cpu: 256m
+              memory: 512Mi
+            requests:
+              cpu: 256m
+              memory: 300Mi
+---
+##################################################################################################
+# task service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: task
+spec:
+  ports:
+    - port: 6096
+  selector:
+    app: task
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: task
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: task
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:task-microsvc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6096
+          env:
+            - name: RDS_HOST
+              value: mysql.todos.svc.cluster.local
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: JWT_ACCESS_TOKEN
+          resources:
+            limits:
+              cpu: 256m
+              memory: 512Mi
+            requests:
+              cpu: 256m
+              memory: 300Mi
+---
+##################################################################################################
+# database service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: mysql
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: mysql
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mysql-db-microsvc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: DATABASE_HOST
+              value: mysql.todos.svc.cluster.local
+          resources:
+            limits:
+              cpu: 1024m
+              memory: 2048Mi
+            requests:
+              cpu: 1024m
+              memory: 1024Mi
+---

@@ -50,7 +50,7 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: productpage
-          image: docker.io/istio/examples-bookinfo-productpage-v1:1.16.2
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-productpage
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9080
@@ -136,34 +136,7 @@ spec:
     app: reviews
     version: v1
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: reviews-v2
-  labels:
-    app: reviews
-    service: reviews
-spec:
-  ports:
-    - port: 9080
-  selector:
-    app: reviews
-    version: v2
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: reviews-v3
-  labels:
-    app: reviews
-    service: reviews
-spec:
-  ports:
-    - port: 9080
-  selector:
-    app: reviews
-    version: v3
----
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -205,96 +178,7 @@ spec:
               cpu: 100m
               memory: 200Mi
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: reviews-v2
-  labels:
-    app: reviews
-    version: v2
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: reviews
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: reviews
-        version: v2
-    spec:
-      serviceAccountName: bookinfo-pod
-      containers:
-        - name: reviews
-          image: docker.io/istio/examples-bookinfo-reviews-v2:1.16.2
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: LOG_DIR
-              value: "/tmp/logs"
-            - name: SERVICE_VERSION
-              value: v2
-            - name: ENABLE_RATINGS
-              value: "true"
-            - name: RATINGS_HOSTNAME
-              value: ratings.bookinfo.svc.cluster.local
-            - name: STAR_COLOR
-              value: black
-          ports:
-            - containerPort: 9080
-          resources:
-            limits:
-              cpu: 200m
-              memory: 300Mi
-            requests:
-              cpu: 100m
-              memory: 200Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: reviews-v3
-  labels:
-    app: reviews
-    version: v3
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: reviews
-      version: v3
-  template:
-    metadata:
-      labels:
-        app: reviews
-        version: v3
-    spec:
-      serviceAccountName: bookinfo-pod
-      containers:
-        - name: reviews
-          image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: LOG_DIR
-              value: "/tmp/logs"
-            - name: SERVICE_VERSION
-              value: v3
-            - name: ENABLE_RATINGS
-              value: "true"
-            - name: RATINGS_HOSTNAME
-              value: ratings.bookinfo.svc.cluster.local
-            - name: STAR_COLOR
-              value: red
-          ports:
-            - containerPort: 9080
-          resources:
-            limits:
-              cpu: 200m
-              memory: 300Mi
-            requests:
-              cpu: 100m
-              memory: 200Mi
----
+
 ##################################################################################################
 # Ratings service
 ##################################################################################################
@@ -358,62 +242,3 @@ spec:
               cpu: 100m
               memory: 200Mi
 ---             
-##################################################################################################
-# mysql
-##################################################################################################
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mysql
-  labels:
-    app: mysql
-    version: v1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mysql
-  template:
-    metadata:
-      name: mysql
-      labels:
-        app: mysql
-    spec:
-      serviceAccountName: bookinfo-pod
-      containers:
-        - name: mysql
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:mysql-v8.0.20-bookinfo
-          ports:
-            - containerPort: 3306
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: P@ssw0rd
-            # - name: MYSQL_DATABASE
-            #   value: test
-            - name: MYSQL_USER
-              value: admin
-            - name: MYSQL_PASSWORD
-              value: P@ssw0rd
-            - name: DATABASE_HOST
-              value: localdb
-          # resources:
-          #   limits:
-          #     cpu: 300m
-          #     memory: 750Mi
-          #   requests:
-          #     cpu: 200m
-          #     memory: 512Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql
-  labels:
-    app: mysql
-    service: mysql
-spec:
-  ports:
-    - port: 3306
-  selector:
-    app: mysql
----

@@ -1,0 +1,180 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews-v2
+  labels:
+    app: reviews
+    service: reviews
+spec:
+  ports:
+    - port: 9080
+  selector:
+    app: reviews
+    version: v2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews-v3
+  labels:
+    app: reviews
+    service: reviews
+spec:
+  ports:
+    - port: 9080
+  selector:
+    app: reviews
+    version: v3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-v2
+  labels:
+    app: reviews
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: reviews
+        version: v2
+    spec:
+      serviceAccountName: bookinfo-pod
+      containers:
+        - name: reviews
+          image: docker.io/istio/examples-bookinfo-reviews-v2:1.16.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_DIR
+              value: "/tmp/logs"
+            - name: SERVICE_VERSION
+              value: v2
+            - name: ENABLE_RATINGS
+              value: "true"
+            - name: RATINGS_HOSTNAME
+              value: ratings.bookinfo.svc.cluster.local
+            - name: STAR_COLOR
+              value: black
+          ports:
+            - containerPort: 9080
+          resources:
+            limits:
+              cpu: 200m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-v3
+  labels:
+    app: reviews
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: reviews
+        version: v3
+    spec:
+      serviceAccountName: bookinfo-pod
+      containers:
+        - name: reviews
+          image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_DIR
+              value: "/tmp/logs"
+            - name: SERVICE_VERSION
+              value: v3
+            - name: ENABLE_RATINGS
+              value: "true"
+            - name: RATINGS_HOSTNAME
+              value: ratings.bookinfo.svc.cluster.local
+            - name: STAR_COLOR
+              value: red
+          ports:
+            - containerPort: 9080
+          resources:
+            limits:
+              cpu: 200m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+---
+##################################################################################################
+# Reviews v2
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: reviews-v2-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: reviews
+      version: v2
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/health'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: ratings-vs
+  serviceDiscovery:
+    dns:
+      hostname: reviews-v2.bookinfo.svc.cluster.local
+---
+##################################################################################################
+# Reviews v3
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: reviews-v3-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: reviews
+      version: v3
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/health'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: ratings-vs
+  serviceDiscovery:
+    dns:
+      hostname: reviews-v3.bookinfo.svc.cluster.local
+---

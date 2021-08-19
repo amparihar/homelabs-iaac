@@ -5,7 +5,7 @@
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: mysql-vn
+  name: database-vn
 spec:
   podSelector:
     matchLabels:
@@ -14,83 +14,150 @@ spec:
     - portMapping:
         port: 3306
         protocol: http
-      # healthCheck:
-      #   protocol: http
-      #   path: '/health'
-      #   healthyThreshold: 2
-      #   unhealthyThreshold: 2
-      #   timeoutMillis: 2000
-      #   intervalMillis: 10000
   serviceDiscovery:
     dns:
-      hostname: mysql.bookinfo.svc.cluster.local
+      hostname: mysql.todos.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: mysql-vs
+  name: database-vs
 spec:
-  awsName: mysql.bookinfo.svc.cluster.local
+  awsName: mysql.todos.svc.cluster.local
   provider:
     virtualNode:
       virtualNodeRef:
-        name: mysql-vn
+        name: database-vn
 ---
 ##################################################################################################
-# Details
+# user service
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: details-vn
+  name: user-vn
 spec:
   podSelector:
     matchLabels:
-      app: details
+      app: user
   listeners:
     - portMapping:
-        port: 9080
+        port: 4096
         protocol: http
       healthCheck:
         protocol: http
-        path: '/health'
+        path: "/api/user/health-check"
         healthyThreshold: 2
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
   serviceDiscovery:
     dns:
-      hostname: details.bookinfo.svc.cluster.local
+      hostname: user.todos.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: details-vs
+  name: user-vs
 spec:
-  awsName: details.bookinfo.svc.cluster.local
+  awsName: user.todos.svc.cluster.local
   provider:
     virtualNode:
       virtualNodeRef:
-        name: details-vn
+        name: user-vn
 ---
 ##################################################################################################
-# Ratings
+# group service
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: ratings-vn
+  name: group-vn
 spec:
   podSelector:
     matchLabels:
-      app: ratings
+      app: group
   listeners:
     - portMapping:
-        port: 9080
+        port: 5096
         protocol: http
       healthCheck:
         protocol: http
-        path: '/health'
+        path: "/api/group/health-check"
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+  serviceDiscovery:
+    dns:
+      hostname: group.todos.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: group-vs
+spec:
+  awsName: group.todos.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: group-vn
+---
+##################################################################################################
+# task service
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: task-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: task
+  listeners:
+    - portMapping:
+        port: 6096
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: "/api/task/health-check"
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+  serviceDiscovery:
+    dns:
+      hostname: task.todos.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: task-vs
+spec:
+  awsName: task.todos.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: task-vn
+---
+##################################################################################################
+# frontend
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: frontend-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: "/index.html"
         healthyThreshold: 2
         unhealthyThreshold: 2
         timeoutMillis: 2000
@@ -98,138 +165,36 @@ spec:
   backends:
     - virtualService:
         virtualServiceRef:
-          name: mysql-vs
+          name: user-vs
+    - virtualService:
+        virtualServiceRef:
+          name: group-vs
+    - virtualService:
+        virtualServiceRef:
+          name: task-vs
   serviceDiscovery:
     dns:
-      hostname: ratings.bookinfo.svc.cluster.local
+      hostname: frontend.todos.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: ratings-vs
+  name: frontend-vs
 spec:
-  awsName: ratings.bookinfo.svc.cluster.local
-  provider:
-    virtualNode:
-      virtualNodeRef:
-        name: ratings-vn
----
-##################################################################################################
-# Reviews v1
-##################################################################################################
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualNode
-metadata:
-  name: reviews-v1-vn
-spec:
-  podSelector:
-    matchLabels:
-      app: reviews
-      version: v1
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-      healthCheck:
-        protocol: http
-        path: '/health'
-        healthyThreshold: 2
-        unhealthyThreshold: 2
-        timeoutMillis: 2000
-        intervalMillis: 10000
-  serviceDiscovery:
-    dns:
-      hostname: reviews.bookinfo.svc.cluster.local
----
-##################################################################################################
-# Reviews vservice
-##################################################################################################
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualRouter
-metadata:
-  name: reviews-vr
-spec:
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-  routes:
-    - name: reviews-route
-      httpRoute:
-        match:
-          prefix: /
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: reviews-v1-vn
-              weight: 100
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
-metadata:
-  name: reviews-vs
-spec:
-  awsName: reviews.bookinfo.svc.cluster.local
+  awsName: frontend.todos.svc.cluster.local
   provider:
     virtualRouter:
       virtualRouterRef:
-        name: reviews-vr
----
-##################################################################################################
-# Productpage
-##################################################################################################
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualNode
-metadata:
-  name: productpage-vn
-spec:
-  podSelector:
-    matchLabels:
-      app: productpage
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-      healthCheck:
-        protocol: http
-        path: '/health'
-        healthyThreshold: 2
-        unhealthyThreshold: 2
-        timeoutMillis: 2000
-        intervalMillis: 10000
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: details-vs
-    - virtualService:
-        virtualServiceRef:
-          name: reviews-vs
-    - virtualService:
-        virtualServiceRef:
-          name: ratings-vs
-  serviceDiscovery:
-    dns:
-      hostname: productpage.bookinfo.svc.cluster.local
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
-metadata:
-  name: productpage-vs
-spec:
-  awsName: productpage.bookinfo.svc.cluster.local
-  provider:
-    virtualRouter:
-      virtualRouterRef:
-        name: productpage-vr
+        name: frontend-vr
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualRouter
 metadata:
-  name: productpage-vr
+  name: frontend-vr
 spec:
   listeners:
     - portMapping:
-        port: 9080
+        port: 80
         protocol: http
   routes:
     - name: index-route
@@ -239,7 +204,7 @@ spec:
         action:
           weightedTargets:
             - virtualNodeRef:
-                name: productpage-vn
+                name: frontend-vn
               weight: 100
 ---
 ##################################################################################################
@@ -248,7 +213,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: GatewayRoute
 metadata:
-  name: productpage-gr
+  name: frontend-gwr
 spec:
   httpRoute:
     match:
@@ -257,5 +222,5 @@ spec:
       target:
         virtualService:
           virtualServiceRef:
-            name: productpage-vs
+            name: frontend-vs
 ---

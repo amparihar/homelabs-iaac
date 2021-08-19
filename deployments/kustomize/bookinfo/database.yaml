@@ -1,0 +1,59 @@
+##################################################################################################
+# mysql
+##################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app: mysql
+    spec:
+      serviceAccountName: bookinfo-pod
+      containers:
+        - name: mysql
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:mysql-v8.0.20-bookinfo
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: P@ssw0rd
+            # - name: MYSQL_DATABASE
+            #   value: test
+            - name: MYSQL_USER
+              value: admin
+            - name: MYSQL_PASSWORD
+              value: P@ssw0rd
+            - name: DATABASE_HOST
+              value: localdb
+          # resources:
+          #   limits:
+          #     cpu: 300m
+          #     memory: 750Mi
+          #   requests:
+          #     cpu: 200m
+          #     memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    service: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+---
