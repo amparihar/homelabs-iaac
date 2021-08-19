@@ -60,7 +60,7 @@ module "app_mesh_controller" {
   stage_name              = var.stage_name
   region_id               = var.aws_regions[var.aws_region]
   irsa_assume_role_policy = module.irsa.assume_role_policy
-  xray_tracing_enabled    = true
+  xray_tracing_enabled    = false
   app_namespaces          = var.app_namespaces
 }
 
