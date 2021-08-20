@@ -2,7 +2,8 @@ resources:
   - namespace.yaml
   - hpa.yaml
   - service_account.yaml
-  - base_app.yaml
   - gateway.yaml
+  - base_app.yaml
+  - meshed_app.yaml
   
 namespace: todos
