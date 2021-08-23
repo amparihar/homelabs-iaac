@@ -64,6 +64,18 @@ module "app_mesh_controller" {
   app_namespaces          = var.app_namespaces
 }
 
-output "appmesh_controller_sa_arn" {
-  value = module.app_mesh_controller.appmesh_controller_sa_arn
+output "appmesh_controller_sa_role_arn" {
+  value = module.app_mesh_controller.sa_role_arn
+}
+
+module "kubernetes_external_secrets" {
+  source                  = "./modules/k8s-external-secrets"
+  app_name                = var.app_name
+  stage_name              = var.stage_name
+  region_id               = var.aws_regions[var.aws_region]
+  irsa_assume_role_policy = module.irsa.assume_role_policy
+}
+
+output "kubernetes_external_secrets_sa_role_arn" {
+  value = module.kubernetes_external_secrets.sa_role_arn
 }

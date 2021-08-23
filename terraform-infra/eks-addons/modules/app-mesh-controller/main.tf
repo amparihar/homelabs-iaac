@@ -8,6 +8,7 @@ resource "kubernetes_namespace" "appmesh_controller" {
 }
 
 resource "aws_iam_role" "appmesh_controller_sa" {
+  name               = "AppMeshControllerRole"
   assume_role_policy = var.irsa_assume_role_policy
 }
 
@@ -124,7 +125,7 @@ resource "helm_release" "app-mesh-controller" {
 #   ]
 # }
 
-output "appmesh_controller_sa_arn" {
+output "sa_role_arn" {
   value = aws_iam_role.appmesh_controller_sa.arn
 }
 

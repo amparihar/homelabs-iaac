@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-api-gateway-config
+data:
+  default.conf: |
+    server {
+      # proxy requests based on routes
+      location /api/user {
+        proxy_pass http://user:4096;
+        proxy_set_header X-Forwarded-For $remote_addr;
+      }
+      location /api/group {
+        proxy_pass http://group:5096;
+        proxy_set_header X-Forwarded-For $remote_addr;
+      }
+      location /api/task {
+        proxy_pass http://task:6096;
+        proxy_set_header X-Forwarded-For $remote_addr;
+      }
+      location / {
+          root /usr/share/nginx/html/web;
+          index index.html index.htm;
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-env-config
+data:
+  USER_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
+  GROUP_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
+  TASK_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
+---
