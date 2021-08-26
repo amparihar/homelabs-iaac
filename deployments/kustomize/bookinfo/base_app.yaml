@@ -50,7 +50,7 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: productpage
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-productpage
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:bookinfo-productpage
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9080
@@ -59,8 +59,6 @@ spec:
               value: details.bookinfo.svc.cluster.local
             - name: REVIEWS_HOSTNAME
               value: reviews.bookinfo.svc.cluster.local
-            - name: RATINGS_HOSTNAME
-              value: ratings.bookinfo.svc.cluster.local
           resources:
             limits:
               cpu: 200m
@@ -107,7 +105,7 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: details
-          image: docker.io/istio/examples-bookinfo-details-v1:1.16.2
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-details-v1-1.16.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9080
@@ -159,7 +157,7 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: reviews
-          image: docker.io/istio/examples-bookinfo-reviews-v1:1.16.2
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-reviews-v1-1.16.2
           imagePullPolicy: IfNotPresent
           env:
             - name: LOG_DIR
@@ -217,23 +215,21 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: ratings
-          image: docker.io/istio/examples-bookinfo-ratings-v1:1.16.2
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:bookinfo-ratings
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9080
           env:
             - name: MYSQL_DB_HOST
-              value: localdb
+              value: "mysql.bookinfo.svc.cluster.local"
             - name: MYSQL_DB_PORT
               value: "3306"
             - name: MYSQL_DB_USER
               value: admin
             - name: MYSQL_DB_PASSWORD
               value: P@ssw0rd
-            - name: SERVICE_VERSION 
-              value: v2
-            - name: DB_TYPE
-              value: mysql
+            - name: MYSQL_DATABASE 
+              value: bookdb
           resources:
             limits:
               cpu: 200m

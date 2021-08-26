@@ -22,20 +22,20 @@ spec:
       serviceAccountName: bookinfo-pod
       containers:
         - name: mysql
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:mysql-v8.0.20-bookinfo
+          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-mysql-5.7
           ports:
             - containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: P@ssw0rd
-            # - name: MYSQL_DATABASE
-            #   value: test
+            - name: MYSQL_DATABASE
+              value: bookdb
             - name: MYSQL_USER
               value: admin
             - name: MYSQL_PASSWORD
               value: P@ssw0rd
             - name: DATABASE_HOST
-              value: localdb
+              value: "mysql.bookinfo.svc.cluster.local"
           # resources:
           #   limits:
           #     cpu: 300m

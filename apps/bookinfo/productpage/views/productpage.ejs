@@ -1,0 +1,103 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: MIT-0 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Book Info</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<script>
+  function refreshPage() {
+    window.location.reload();
+  }
+</script>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-static-top">
+    <a class="navbar-brand" href="#">BookInfo</a>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="text-center text-primary">
+          <%= product.title %>
+        </h3>
+        <p>Summary: <%- product.descriptionHtml%>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <% if (details.status==200) { %>
+          <h4 class="text-primary">Book Details</h4>
+          <dl>
+            <dt>Type:</dt>
+            <%= details.data.type %>
+              <dt>Pages:</dt>
+              <%= details.data.pages %>
+                <dt>Publisher:</dt>
+                <%= details.data.publisher %>
+                  <dt>Language:</dt>
+                  <%= details.data.language %>
+                    <dt>ISBN-10:</dt>
+                    <%= details.data['ISBN-10'] %>
+                      <dt>ISBN-13:</dt>
+                      <%= details.data['ISBN-13'] %>
+          </dl>
+          <% } else { %>
+            <h4 class="text-primary">Error fetching product details!</h4>
+            <p>
+              <%= details.error%>
+            </p>
+            <% }; %>
+      </div>
+      <div class="col-md-6">
+        <% if (reviews.status==200) {%>
+          <h4 class="text-primary">Book Reviews</h4>
+          <% for(var i=0; i < reviews.data.reviews.length; i++){ %>
+            <blockquote>
+              <p>
+                <%= reviews.data.reviews[i].text %>
+              </p>
+              <small>
+                <%= reviews.data.reviews[i].reviewer %>
+              </small>
+              <% if (reviews.data.reviews[i].rating) {%>
+                <% if (reviews.data.reviews[i].rating.stars) {%>
+                  <font color="<%=reviews.data.reviews[i].rating.color%>">
+                    <!-- full stars: -->
+                    <% for (var x=0; x < reviews.data.reviews[i].rating.stars; x++) { %>
+                      <span class="glyphicon glyphicon-star"></span>
+                      <% } %>
+                        <!-- empty stars: -->
+                        <% for (var y=0; y < (5 - reviews.data.reviews[i].rating.stars); y++) { %>
+                          <span class="glyphicon glyphicon-star-empty"></span>
+                          <% } %>
+                  </font>
+                  <% } else if (reviews.data.reviews[i].rating.error) { %>
+                    <p><i>
+                        <%= reviews.data.reviews[i].rating.error%>
+                      </i></p>
+                    <% }} %>
+            </blockquote>
+            <% }} else { %>
+              <h4 class="text-primary">Error fetching product reviews!</h4>
+              <p>
+                <%= reviews.error %>
+              </p>
+              <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,6 +1,3 @@
-CREATE DATABASE test;
-USE test;
-
 CREATE TABLE `ratings` (
   `ReviewID` INT NOT NULL,
   `Rating` INT,

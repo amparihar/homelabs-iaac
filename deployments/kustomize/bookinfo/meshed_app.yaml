@@ -142,7 +142,7 @@ spec:
       hostname: reviews.bookinfo.svc.cluster.local
 ---
 ##################################################################################################
-# Reviews vservice
+# Reviews router
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualRouter
@@ -204,9 +204,7 @@ spec:
     - virtualService:
         virtualServiceRef:
           name: reviews-vs
-    - virtualService:
-        virtualServiceRef:
-          name: ratings-vs
+  
   serviceDiscovery:
     dns:
       hostname: productpage.bookinfo.svc.cluster.local
