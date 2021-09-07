@@ -1,4 +1,5 @@
 resource "kubernetes_namespace" "appmesh_controller" {
+  count = var.appmesh_controller_enabled ? 1 : 0
   metadata {
     annotations = {
       name = var.appmesh_controller_namespace
@@ -6,49 +7,13 @@ resource "kubernetes_namespace" "appmesh_controller" {
     name = var.appmesh_controller_namespace
   }
 }
-
-resource "aws_iam_role" "appmesh_controller_sa" {
-  name               = "AppMeshControllerRole"
-  assume_role_policy = var.irsa_assume_role_policy
-}
-
-# add AWS managed IAM policies to appmesh controller sa
-resource "aws_iam_role_policy_attachment" "AWSAppMeshFullAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSAppMeshFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "AWSCloudMapFullAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSCloudMapFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "AWSCloudMapDiscoverInstanceAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSCloudMapDiscoverInstanceAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "AWSAppMeshEnvoyAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSAppMeshEnvoyAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "AWSXRayDaemonWriteAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "CloudWatchLogsFullAccess" {
-  role       = aws_iam_role.appmesh_controller_sa.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-}
-
 resource "kubernetes_service_account" "appmesh_controller" {
+  count = var.appmesh_controller_enabled ? 1 : 0
   metadata {
     name      = "appmesh-controller"
     namespace = var.appmesh_controller_namespace
     annotations = {
-      "eks.amazonaws.com/role-arn" = aws_iam_role.appmesh_controller_sa.arn
+      "eks.amazonaws.com/role-arn" = var.service_account_role_arn
     }
     labels = {
       "app.kubernetes.io/component" = "controller"
@@ -78,6 +43,7 @@ resource "helm_release" "app-mesh-controller" {
     name  = "serviceAccount.name"
     value = "appmesh-controller"
   }
+
   # inject the AWS X-Ray daemon sidecar in each pod scheduled to run on the mesh.
   set {
     name  = "tracing.enabled"
@@ -124,8 +90,4 @@ resource "helm_release" "app-mesh-controller" {
 #     aws_iam_role.appmesh_controller_sa
 #   ]
 # }
-
-output "sa_role_arn" {
-  value = aws_iam_role.appmesh_controller_sa.arn
-}
 

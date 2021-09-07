@@ -160,21 +160,21 @@ spec:
           image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/homelabs:istio-bookinfo-reviews-v1-1.16.2
           imagePullPolicy: IfNotPresent
           env:
-            - name: LOG_DIR
-              value: "/tmp/logs"
             - name: SERVICE_VERSION
-              value: v1
+              value: "v1"
             - name: ENABLE_RATINGS
-              value: "false"
+              value: "\"false\""
+            - name: RATINGS_HOSTNAME
+              value: "ratings.bookinfo.svc.cluster.local"
           ports:
             - containerPort: 9080
           resources:
             limits:
-              cpu: 200m
-              memory: 300Mi
+              cpu: 300m
+              memory: 1024Mi
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 300m
+              memory: 512Mi
 ---
 
 ##################################################################################################

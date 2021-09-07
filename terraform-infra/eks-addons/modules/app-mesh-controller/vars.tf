@@ -4,7 +4,7 @@ variable "app_name" {
 variable "stage_name" {
   type = string
 }
-variable "irsa_assume_role_policy" {
+variable "service_account_role_arn" {
   type = string
 }
 variable "region_id" {
@@ -13,14 +13,13 @@ variable "region_id" {
 variable "xray_tracing_enabled" {
   type = bool
 }
+
 variable "app_namespaces" {
   type = list(string)
 }
 
 variable "appmesh_controller_enabled" {
-  type        = bool
-  default     = true
-  description = "Variable indicating whether deployment is enabled"
+  type = bool
 }
 
 # Helm

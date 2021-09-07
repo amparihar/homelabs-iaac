@@ -37,3 +37,15 @@ variable "app_namespaces" {
   type    = list(string)
   default = []
 }
+
+variable "appmesh_controller_enabled" {
+  type        = bool
+  default     = true
+  description = "Variable indicating whether appmesh deployment is enabled"
+}
+
+variable "kubernetes_external_secrets_enabled" {
+  type        = bool
+  default     = true
+  description = "Variable indicating whether k8s external secrets deployment is enabled"
+}

@@ -1,0 +1,38 @@
+---
+##################################################################################################
+# database
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: mysql-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql
+  listeners:
+    - portMapping:
+        port: 3306
+        protocol: http
+      # healthCheck:
+      #   protocol: http
+      #   path: '/health'
+      #   healthyThreshold: 2
+      #   unhealthyThreshold: 2
+      #   timeoutMillis: 2000
+      #   intervalMillis: 10000
+  serviceDiscovery:
+    dns:
+      hostname: mysql.bookinfo.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: mysql-vs
+spec:
+  awsName: mysql.bookinfo.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: mysql-vn
+---

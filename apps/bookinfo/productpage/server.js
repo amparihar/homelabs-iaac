@@ -18,8 +18,8 @@ var reviewsUrl = reviewsHostname
   ? "http://" + reviewsHostname + ":9080/reviews"
   : "http://localhost:8002/reviews";
 
-console.log("detailsUrl -> ", detailsUrl);
-console.log("reviewsUrl -> ", reviewsUrl);
+console.log("detailsUrl:", detailsUrl);
+console.log("reviewsUrl:", reviewsUrl);
 
 // ========================
 // Middlewares
@@ -37,7 +37,7 @@ async function getDetails(url) {
     console.log("getDetails error ", error);
     return {
       status: 500,
-      error: "Sorry, product details are currently unavailable for this book.",
+      error: "Sorry, product details are currently unavailable for this book. Please try again later.",
     };
   }
 }
@@ -47,10 +47,11 @@ async function getReviews(url) {
     const reviewsResponse = await axios.get(url);
     return { status: reviewsResponse.status, data: reviewsResponse.data };
   } catch (error) {
-    console.log("getReviews error ", error);
+    console.log("getReviews url:", url);
+    console.log("getReviews error:", JSON.stringify(error));
     return {
       status: 500,
-      error: "Sorry, product reviews are currently unavailable for this book.",
+      error: "Sorry, product reviews are currently unavailable for this book. Please try again later.",
     };
   }
 }
@@ -58,9 +59,9 @@ async function getReviews(url) {
 app.get("/", async (req, res) => {
   const product = await getProduct();
   const details = await getDetails(detailsUrl + "/0");
-  console.log("details -> ", details);
+  console.log("details response:", JSON.stringify(details));
   const reviews = await getReviews(reviewsUrl + "/0");
-  console.log("reviews -> ", JSON.stringify(reviews));
+  console.log("reviews response:", JSON.stringify(reviews));
 
   res.render("productpage.ejs", {
     product,

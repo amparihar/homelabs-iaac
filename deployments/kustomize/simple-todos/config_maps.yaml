@@ -30,7 +30,7 @@ kind: ConfigMap
 metadata:
   name: frontend-env-config
 data:
-  USER_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
-  GROUP_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
-  TASK_API_BASE_URL: "http://k8s-todos-ingressg-e20e4y14b4-2286f096098877cc.elb.ap-south-1.amazonaws.com/api"
+  USER_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
+  GROUP_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
+  TASK_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
 ---

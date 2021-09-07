@@ -7,7 +7,7 @@ variable "stage_name" {
 variable "region_id" {
   type = string
 }
-variable "irsa_assume_role_policy" {
+variable "service_account_role_arn" {
   type = string
 }
 
@@ -18,9 +18,7 @@ variable "kubernetes_external_secrets_create_sa" {
 }
 
 variable "kubernetes_external_secrets_enabled" {
-  type        = bool
-  default     = true
-  description = "Variable indicating whether deployment is enabled"
+  type = bool
 }
 
 # Helm

@@ -25,8 +25,15 @@ provider "helm" {
 }
 
 module "irsa" {
-  source   = "./modules/irsa"
-  oidc_url = data.aws_eks_cluster.main.identity[0].oidc[0].issuer
+  source                              = "./modules/irsa"
+  oidc_url                            = data.aws_eks_cluster.main.identity[0].oidc[0].issuer
+  region_id                           = var.aws_regions[var.aws_region]
+  appmesh_controller_enabled          = var.appmesh_controller_enabled
+  kubernetes_external_secrets_enabled = var.kubernetes_external_secrets_enabled
+}
+
+output "service_account_role_arn" {
+  value = module.irsa.service_account_role_arn
 }
 
 module "aws_load_balancer_controller" {
@@ -55,27 +62,21 @@ module "fargate_logging" {
 }
 
 module "app_mesh_controller" {
-  source                  = "./modules/app-mesh-controller"
-  app_name                = var.app_name
-  stage_name              = var.stage_name
-  region_id               = var.aws_regions[var.aws_region]
-  irsa_assume_role_policy = module.irsa.assume_role_policy
-  xray_tracing_enabled    = false
-  app_namespaces          = var.app_namespaces
-}
-
-output "appmesh_controller_sa_role_arn" {
-  value = module.app_mesh_controller.sa_role_arn
+  source                     = "./modules/app-mesh-controller"
+  app_name                   = var.app_name
+  stage_name                 = var.stage_name
+  region_id                  = var.aws_regions[var.aws_region]
+  service_account_role_arn   = module.irsa.service_account_role_arn
+  appmesh_controller_enabled = var.appmesh_controller_enabled
+  xray_tracing_enabled       = false
+  app_namespaces             = var.app_namespaces
 }
 
 module "kubernetes_external_secrets" {
-  source                  = "./modules/k8s-external-secrets"
-  app_name                = var.app_name
-  stage_name              = var.stage_name
-  region_id               = var.aws_regions[var.aws_region]
-  irsa_assume_role_policy = module.irsa.assume_role_policy
-}
-
-output "kubernetes_external_secrets_sa_role_arn" {
-  value = module.kubernetes_external_secrets.sa_role_arn
+  source                              = "./modules/k8s-external-secrets"
+  app_name                            = var.app_name
+  stage_name                          = var.stage_name
+  region_id                           = var.aws_regions[var.aws_region]
+  kubernetes_external_secrets_enabled = var.kubernetes_external_secrets_enabled
+  service_account_role_arn            = module.irsa.service_account_role_arn
 }

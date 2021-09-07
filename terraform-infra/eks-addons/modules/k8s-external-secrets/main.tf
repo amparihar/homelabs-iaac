@@ -1,26 +1,12 @@
-resource "aws_iam_role" "kubernetes_external_secrets_sa" {
-  name               = "KubernetesExternalSecretsRole"
-  assume_role_policy = var.irsa_assume_role_policy
-}
-resource "aws_iam_policy" "kubernetes_external_secrets_sa" {
-  path   = "/" # Path in which to create the policy
-  policy = data.aws_iam_policy_document.kubernetes_external_secrets_sa_iam_policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "kubernetes_external_secrets_sa" {
-  role       = aws_iam_role.kubernetes_external_secrets_sa.name
-  policy_arn = aws_iam_policy.kubernetes_external_secrets_sa.arn
-}
-
 # Create k8s Service Account 
 # Associate IAM Role with the service account, by annotating it
 resource "kubernetes_service_account" "kubernetes_external_secrets" {
-  count = var.kubernetes_external_secrets_create_sa ? 1 : 0
+  count = (var.kubernetes_external_secrets_enabled && var.kubernetes_external_secrets_create_sa) ? 1 : 0
   metadata {
     name      = "kubernetes-external-secrets"
     namespace = var.kubernetes_external_secrets_namespace
     annotations = {
-      "eks.amazonaws.com/role-arn" = aws_iam_role.kubernetes_external_secrets_sa.arn
+      "eks.amazonaws.com/role-arn" = var.service_account_role_arn
     }
     labels = {
       "app.kubernetes.io/component" = "controller"
@@ -52,7 +38,7 @@ resource "helm_release" "kubernetes_external_secrets" {
   }
   set {
     name  = "serviceAccount.annotations\\.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.kubernetes_external_secrets_sa.arn
+    value = var.service_account_role_arn
   }
   set {
     name  = "POLLER_INTERVAL_MILLISECONDS"
@@ -62,8 +48,4 @@ resource "helm_release" "kubernetes_external_secrets" {
   depends_on = [
     kubernetes_service_account.kubernetes_external_secrets
   ]
-}
-
-output "sa_role_arn" {
-  value = aws_iam_role.kubernetes_external_secrets_sa.arn
 }

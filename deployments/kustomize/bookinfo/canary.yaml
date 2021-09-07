@@ -91,3 +91,29 @@ spec:
     dns:
       hostname: reviews-v3.bookinfo.svc.cluster.local
 ---
+##################################################################################################
+# Reviews router
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: reviews-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: reviews-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: reviews-v1-vn
+              weight: 10
+            - virtualNodeRef:
+                name: reviews-v3-vn
+              weight: 90
+---
