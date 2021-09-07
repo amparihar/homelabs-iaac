@@ -1,6 +1,6 @@
 variable "app_name" {
   type    = string
-  default = "EOMFTrading"
+  default = "homelabs"
 }
 variable "stage_name" {
   type    = string

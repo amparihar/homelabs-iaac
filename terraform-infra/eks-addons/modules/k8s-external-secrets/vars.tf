@@ -11,12 +11,6 @@ variable "service_account_role_arn" {
   type = string
 }
 
-variable "kubernetes_external_secrets_create_sa" {
-  type        = bool
-  default     = false
-  description = "Variable indicating whether kubernetes service account needs to be created for kes"
-}
-
 variable "kubernetes_external_secrets_enabled" {
   type = bool
 }
@@ -51,6 +45,6 @@ variable "kubernetes_external_secrets_create_namespace" {
 }
 variable "kubernetes_external_secrets_namespace" {
   type        = string
-  default     = "default"
+  default     = "external-secrets"
   description = "The namespace in which the kubernetes external secrets service account has been created"
 }

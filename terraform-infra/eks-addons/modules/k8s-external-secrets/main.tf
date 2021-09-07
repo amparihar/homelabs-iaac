@@ -1,7 +1,17 @@
+resource "kubernetes_namespace" "kubernetes_external_secrets" {
+  count = var.kubernetes_external_secrets_enabled ? 1 : 0
+  metadata {
+    annotations = {
+      name = var.kubernetes_external_secrets_namespace
+    }
+    name = var.kubernetes_external_secrets_namespace
+  }
+}
+
 # Create k8s Service Account 
 # Associate IAM Role with the service account, by annotating it
 resource "kubernetes_service_account" "kubernetes_external_secrets" {
-  count = (var.kubernetes_external_secrets_enabled && var.kubernetes_external_secrets_create_sa) ? 1 : 0
+  count = (var.kubernetes_external_secrets_enabled) ? 1 : 0
   metadata {
     name      = "kubernetes-external-secrets"
     namespace = var.kubernetes_external_secrets_namespace
@@ -30,16 +40,16 @@ resource "helm_release" "kubernetes_external_secrets" {
   }
   set {
     name  = "serviceAccount.create"
-    value = tostring(!var.kubernetes_external_secrets_create_sa)
+    value = "false"
   }
   set {
     name  = "serviceAccount.name"
     value = "kubernetes-external-secrets"
   }
-  set {
-    name  = "serviceAccount.annotations\\.eks\\.amazonaws\\.com/role-arn"
-    value = var.service_account_role_arn
-  }
+  # set {
+  #   name  = "serviceAccount.annotations\\.eks\\.amazonaws\\.com/role-arn"
+  #   value = var.service_account_role_arn
+  # }
   set {
     name  = "POLLER_INTERVAL_MILLISECONDS"
     value = "30000"
@@ -49,3 +59,4 @@ resource "helm_release" "kubernetes_external_secrets" {
     kubernetes_service_account.kubernetes_external_secrets
   ]
 }
+
