@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "k8s_sa_assume_role_iam_policy" {
 data "aws_iam_policy_document" "kubernetes_external_secrets_sa_iam_policy" {
   statement {
     actions   = ["ssm:GetParameter"]
-    resources = ["arn:aws:ssm:${var.region_id}:${data.aws_caller_identity.current.account_id}:parameter/*"]
+    resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
   }
 
   statement {
