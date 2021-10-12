@@ -111,7 +111,8 @@ module "core_fargate_profile" {
     { namespace = "kube-system" },
     { namespace = "kubernetes-dashboard" },
     { namespace = "appmesh-system" },
-    { namespace = "aws-observability" }
+    { namespace = "aws-observability" },
+    { namespace = "external-secrets" }
   ]
   # selectors            = [{ namespace = "kube-system", labels = { k8s-app = "kube-dns" } }]
 }
