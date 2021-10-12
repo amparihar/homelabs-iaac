@@ -8,13 +8,13 @@ variable "stage_name" {
 }
 variable "aws_region" {
   type    = string
-  default = "mumbai"
+  default = "ohio"
 }
 variable "aws_regions" {
   type = map(string)
   default = {
     north-virginia = "us-east-1"
-    mumbai         = "ap-south-1"
+    ohio           = "us-east-2"
   }
 }
 variable "cluster_name" {

@@ -8,7 +8,7 @@ metadata:
   name: frontend
 spec:
   ports:
-    - port: 80
+    - port: 3000
   selector:
     app: frontend
 ---
@@ -38,10 +38,10 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: frontend
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mytodos-microsvc
+          image: aparihar/todos-mytodos-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
             - name: USER_API_BASE_URL
               valueFrom: 
@@ -102,7 +102,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: user
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:user-microsvc
+          image: aparihar/todos-user-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4096
@@ -176,7 +176,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: group
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:group-microsvc
+          image: aparihar/todos-group-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096
@@ -250,10 +250,85 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: task
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:task-microsvc
+          image: aparihar/todos-task-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6096
+          env:
+            - name: RDS_HOST
+              value: database
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: JWT_ACCESS_TOKEN
+          resources:
+            limits:
+              cpu: 256m
+              memory: 512Mi
+            requests:
+              cpu: 256m
+              memory: 300Mi
+              
+---
+##################################################################################################
+# progress tracker service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: progress
+spec:
+  ports:
+    - port: 7096
+  selector:
+    app: progress
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: progress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: progress
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: progress
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: progress
+          image: aparihar/todos-progress-tracker-microsvc-v2:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 7096
           env:
             - name: RDS_HOST
               value: database
@@ -324,7 +399,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: mysql
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mysql-db-microsvc
+          image: aparihar/todos-mysql-db-microsvc:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3306
