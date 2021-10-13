@@ -64,5 +64,5 @@ output "assume_role_policy" {
 }
 
 output "service_account_role_arn" {
-  value = length(aws_iam_role.sa.*.arn) > 0 ? aws_iam_role.sa[0].arn : ""
+  value = length(aws_iam_role.sa.*.arn) > 0 ? aws_iam_role.sa[0].arn : "Please use the fargate pod execution role arn"
 }

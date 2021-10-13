@@ -45,7 +45,7 @@ variable "private_networking" {
 variable "multi_az_deployment" {
   type = bool
 }
-var "app_ingress_gateway_container_port" {
+variable "app_ingress_gateway_container_port" {
   type    = number
   default = 8080
 }

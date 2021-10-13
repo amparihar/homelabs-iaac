@@ -40,7 +40,7 @@ variable "app_namespaces" {
 
 variable "appmesh_controller_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Variable indicating whether appmesh deployment is enabled"
 }
 
