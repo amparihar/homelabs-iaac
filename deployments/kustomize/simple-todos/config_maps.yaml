@@ -30,14 +30,14 @@ kind: ConfigMap
 metadata:
   name: frontend-env-config
 data:
-  USER_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
-  GROUP_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
-  TASK_API_BASE_URL: "http://k8s-todos-ingressg-6ed2e6d65a-1614e932fc327f69.elb.ap-south-1.amazonaws.com/api"
+  USER_API_BASE_URL: "http://k8s-todos-ingressg-2c166b8b4a-61bf25cb8c894e18.elb.us-east-2.amazonaws.com/api"
+  GROUP_API_BASE_URL: "http://k8s-todos-ingressg-2c166b8b4a-61bf25cb8c894e18.elb.us-east-2.amazonaws.com/api"
+  TASK_API_BASE_URL: "http://k8s-todos-ingressg-2c166b8b4a-61bf25cb8c894e18.elb.us-east-2.amazonaws.com/api"
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: backend-env-config
 data:
-  PROGRESS_TRACKER_API_HOST: "http://progress"
+  PROGRESS_TRACKER_API_HOST: "progress"
   PROGRESS_TRACKER_API_PORT: "7096"

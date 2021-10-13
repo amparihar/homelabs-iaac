@@ -8,7 +8,7 @@ variable "stage_name" {
 }
 variable "aws_region" {
   type    = string
-  default = "mumbai"
+  default = "ohio"
 }
 variable "aws_regions" {
   type = map(string)

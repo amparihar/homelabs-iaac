@@ -31,16 +31,16 @@ output "private_subnet_ids" {
 }
 
 module "security-groups" {
-  source                     = "./security-groups"
-  app_name                   = var.app_name
-  stage_name                 = var.stage_name
-  create_vpc                 = module.vpc.create_vpc
-  vpcid                      = module.vpc.vpcid[0]
-  public_subnets             = var.public_subnets
-  private_subnets            = var.private_subnets
-  private_networking         = var.private_networking
-  envoy_proxy_container_port = 8080
-  multi_az_deployment        = var.multi_az_deployment
+  source                         = "./security-groups"
+  app_name                       = var.app_name
+  stage_name                     = var.stage_name
+  create_vpc                     = module.vpc.create_vpc
+  vpcid                          = module.vpc.vpcid[0]
+  public_subnets                 = var.public_subnets
+  private_subnets                = var.private_subnets
+  private_networking             = var.private_networking
+  ingress_gateway_container_port = var.app_ingress_gateway_container_port
+  multi_az_deployment            = var.multi_az_deployment
 }
 
 module "iam" {

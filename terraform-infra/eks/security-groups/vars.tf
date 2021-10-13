@@ -19,7 +19,7 @@ variable "public_subnets" {
 variable "private_networking" {
   type = bool
 }
-variable "envoy_proxy_container_port" {
+variable "ingress_gateway_container_port" {
   type = number
 }
 variable "multi_az_deployment" {
