@@ -8,12 +8,12 @@ variable "stage_name" {
 }
 variable "aws_region" {
   type    = string
-  default = "ohio"
+  default = "mumbai"
 }
 variable "aws_regions" {
   type = map(string)
   default = {
-    north-virginia = "us-east-1"
+    mumbai         = "ap-south-1"
     ohio           = "us-east-2"
   }
 }
@@ -46,6 +46,6 @@ variable "appmesh_controller_enabled" {
 
 variable "kubernetes_external_secrets_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Variable indicating whether k8s external secrets deployment is enabled"
 }

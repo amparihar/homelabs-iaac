@@ -1,6 +1,6 @@
-aws_region = "ohio"
+aws_region = "mumbai"
 aws_regions = {
-  north-virginia = "us-east-1"
+  mumbai         = "ap-south-1"
   ohio           = "us-east-2"
 }
 vpc_cidr            = "10.10.0.0/20"

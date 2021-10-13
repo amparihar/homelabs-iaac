@@ -2,16 +2,6 @@
 ##################################################################################################
 # frontend
 ##################################################################################################
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend
-spec:
-  ports:
-    - port: 3000
-  selector:
-    app: frontend
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -210,6 +200,16 @@ spec:
                 secretKeyRef:
                   name: auth-secret
                   key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_TRACKER_API_HOST
+              valueFrom: 
+                configMapKeyRef:
+                  name: backend-env-config
+                  key: PROGRESS_TRACKER_API_HOST
+            - name: PROGRESS_TRACKER_API_PORT
+              valueFrom: 
+                configMapKeyRef:
+                  name: backend-env-config
+                  key: PROGRESS_TRACKER_API_PORT
           resources:
             limits:
               cpu: 256m
@@ -284,6 +284,16 @@ spec:
                 secretKeyRef:
                   name: auth-secret
                   key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_TRACKER_API_HOST
+              valueFrom: 
+                configMapKeyRef:
+                  name: backend-env-config
+                  key: PROGRESS_TRACKER_API_HOST
+            - name: PROGRESS_TRACKER_API_PORT
+              valueFrom: 
+                configMapKeyRef:
+                  name: backend-env-config
+                  key: PROGRESS_TRACKER_API_PORT
           resources:
             limits:
               cpu: 256m
