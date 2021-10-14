@@ -164,6 +164,10 @@ spec:
         version: v1
     spec:
       serviceAccountName: todos-pod
+      initContainers:
+        - name: aws-cli
+          image: amazon/aws-cli
+          command: ["aws", "ssm", "get-parameter", "--name", "homelabs/todos/jwt/accessToken"]
       containers:
         - name: group
           image: aparihar/todos-group-microsvc-v2:latest

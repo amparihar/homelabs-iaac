@@ -46,6 +46,6 @@ variable "appmesh_controller_enabled" {
 
 variable "kubernetes_external_secrets_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Variable indicating whether k8s external secrets deployment is enabled"
 }
