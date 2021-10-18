@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 1.0.9"
+}
+
 data "aws_eks_cluster" "main" {
   name = var.cluster_name
 }
@@ -28,8 +32,8 @@ module "irsa" {
   source                              = "./modules/irsa"
   oidc_url                            = data.aws_eks_cluster.main.identity[0].oidc[0].issuer
   region_id                           = var.aws_regions[var.aws_region]
-  appmesh_controller_enabled          = var.appmesh_controller_enabled
-  kubernetes_external_secrets_enabled = var.kubernetes_external_secrets_enabled
+  appmesh_controller_enabled          = var.app_appmesh_controller_enabled
+  kubernetes_external_secrets_enabled = var.app_kubernetes_external_secrets_enabled
 }
 
 output "service_account_role_arn" {
@@ -67,8 +71,8 @@ module "app_mesh_controller" {
   stage_name                 = var.stage_name
   region_id                  = var.aws_regions[var.aws_region]
   service_account_role_arn   = module.irsa.service_account_role_arn
-  appmesh_controller_enabled = var.appmesh_controller_enabled
-  xray_tracing_enabled       = false
+  appmesh_controller_enabled = var.app_appmesh_controller_enabled
+  xray_tracing_enabled       = var.app_xray_tracing_enabled
   app_namespaces             = var.app_namespaces
 }
 
@@ -77,6 +81,6 @@ module "kubernetes_external_secrets" {
   app_name                            = var.app_name
   stage_name                          = var.stage_name
   region_id                           = var.aws_regions[var.aws_region]
-  kubernetes_external_secrets_enabled = var.kubernetes_external_secrets_enabled
+  kubernetes_external_secrets_enabled = var.app_kubernetes_external_secrets_enabled
   service_account_role_arn            = module.irsa.service_account_role_arn
 }

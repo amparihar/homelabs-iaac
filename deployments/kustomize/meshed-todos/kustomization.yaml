@@ -1,5 +1,7 @@
 resources:
   - namespace.yaml
+  - config_maps.yaml
+  - secrets.yaml
   - hpa.yaml
   - service_account.yaml
   - gateway.yaml
