@@ -88,6 +88,13 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: progress-vs
+    - virtualService:
+        virtualServiceRef:
+          name: database-vs
   serviceDiscovery:
     dns:
       hostname: group.todos.svc.cluster.local
@@ -125,6 +132,13 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: progress-vs
+    - virtualService:
+        virtualServiceRef:
+          name: database-vs
   serviceDiscovery:
     dns:
       hostname: task.todos.svc.cluster.local
@@ -141,23 +155,23 @@ spec:
         name: task-vn
 ---
 ##################################################################################################
-# frontend
+# progress
 ##################################################################################################
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: frontend-vn
+  name: progress-vn
 spec:
   podSelector:
     matchLabels:
-      app: frontend
+      app: progress
   listeners:
     - portMapping:
-        port: 80
+        port: 7096
         protocol: http
       healthCheck:
         protocol: http
-        path: "/index.html"
+        path: "/api/progress/health-check"
         healthyThreshold: 2
         unhealthyThreshold: 2
         timeoutMillis: 2000
@@ -165,47 +179,21 @@ spec:
   backends:
     - virtualService:
         virtualServiceRef:
-          name: user-vs
-    - virtualService:
-        virtualServiceRef:
-          name: group-vs
-    - virtualService:
-        virtualServiceRef:
-          name: task-vs
+          name: database-vs
   serviceDiscovery:
     dns:
-      hostname: frontend.todos.svc.cluster.local
+      hostname: progress.todos.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
-  name: frontend-vs
+  name: progress-vs
 spec:
-  awsName: frontend.todos.svc.cluster.local
+  awsName: progress.todos.svc.cluster.local
   provider:
-    virtualRouter:
-      virtualRouterRef:
-        name: frontend-vr
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualRouter
-metadata:
-  name: frontend-vr
-spec:
-  listeners:
-    - portMapping:
-        port: 80
-        protocol: http
-  routes:
-    - name: index-route
-      httpRoute:
-        match:
-          prefix: /
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: frontend-vn
-              weight: 100
+    virtualNode:
+      virtualNodeRef:
+        name: progress-vn
 ---
 ##################################################################################################
 # GatewayRoute
@@ -213,14 +201,55 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: GatewayRoute
 metadata:
-  name: frontend-gwr
+  name: user-gateway-route
 spec:
   httpRoute:
     match:
-      prefix: "/"
+      prefix: "/api/user"
     action:
       target:
         virtualService:
           virtualServiceRef:
-            name: frontend-vs
+            name: user-vs
 ---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: group-gateway-route
+spec:
+  httpRoute:
+    match:
+      prefix: "/api/group"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: group-vs
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: task-gateway-route
+spec:
+  httpRoute:
+    match:
+      prefix: "/api/task"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: task-vs
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: progress-gateway-route
+spec:
+  httpRoute:
+    match:
+      prefix: "/api/progress"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: progress-vs
