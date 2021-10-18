@@ -1,11 +1,12 @@
 
 locals {
   assume_role_policy = data.aws_iam_policy_document.k8s_sa_assume_role_iam_policy.json
+  sa_role_enabled    = (var.appmesh_controller_enabled || var.kubernetes_external_secrets_enabled) ? 1 : 0
 }
 
 # Appmesh controller role & policies
 resource "aws_iam_role" "sa" {
-  count              = var.appmesh_controller_enabled ? 1 : 0
+  count              = local.sa_role_enabled
   assume_role_policy = local.assume_role_policy
 }
 
