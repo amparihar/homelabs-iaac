@@ -1,97 +1,5 @@
 ---
 ##################################################################################################
-# config/secret
-##################################################################################################
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: auth-config
-data:
-  JWT_ACCESS_TOKEN: "2d9a5ea7579b9839f5fa9659ce85da84ecd0d8fd6b8be1721553b4ef324a7fa7429f5558afe6b2a6c68ee3812a498c8431baea4682bd65476a320400bb08ec39"
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: frontend-config
-data:
-  USER_API_BASE_URL: "http://user.todos.svc.cluster.local:4096/api"
-  GROUP_API_BASE_URL: "http://group.todos.svc.cluster.local:5096/api"
-  TASK_API_BASE_URL: "http://task.todos.svc.cluster.local:6096/api"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: database-connection-secret
-# unstructured arbitrary key/value pairs, default
-#type: Opaque
-data:
-  RDS_PORT: MzMwNg==
-  RDS_DB_NAME: dG9kb3NkYg==
-  RDS_USERNAME: YWRtaW4=
-  RDS_PASSWORD: UGFzc3dvcmQxMjM=
-  RDS_ROOT_PASSWORD: UGFzc3dvcmQxMjM=
----
-##################################################################################################
-# frontend
-##################################################################################################
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend
-spec:
-  ports:
-    - port: 80
-  selector:
-    app: frontend
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: frontend
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: frontend
-      version: v1
-  template:
-    metadata:
-      labels:
-        app: frontend
-        version: v1
-    spec:
-      serviceAccountName: todos-pod
-      containers:
-        - name: frontend
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mytodos-microsvc
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-          env:
-            - name: USER_API_BASE_URL
-              valueFrom: 
-                configMapKeyRef:
-                  name: frontend-config
-                  key: USER_API_BASE_URL
-            - name: GROUP_API_BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: frontend-config
-                  key: GROUP_API_BASE_URL
-            - name: TASK_API_BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: frontend-config
-                  key: TASK_API_BASE_URL
-          resources:
-            limits:
-              cpu: 512m
-              memory: 1024Mi
-            requests:
-              cpu: 200m
-              memory: 512Mi
----
-##################################################################################################
 # user service
 ##################################################################################################
 apiVersion: v1
@@ -123,7 +31,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: user
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:user-microsvc
+          image: aparihar/todos-user-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4096
@@ -197,7 +105,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: group
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:group-microsvc
+          image: aparihar/todos-group-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096
@@ -231,6 +139,10 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_TRACKER_API_HOST
+              value: progress.todos.svc.cluster.local
+            - name: PROGRESS_TRACKER_API_PORT
+              value: "7096"
           resources:
             limits:
               cpu: 256m
@@ -271,7 +183,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: task
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:task-microsvc
+          image: aparihar/todos-task-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6096
@@ -305,6 +217,10 @@ spec:
                 configMapKeyRef:
                   name: auth-config
                   key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_TRACKER_API_HOST
+              value: progress.todos.svc.cluster.local
+            - name: PROGRESS_TRACKER_API_PORT
+              value: "7096"
           resources:
             limits:
               cpu: 256m
@@ -312,6 +228,80 @@ spec:
             requests:
               cpu: 256m
               memory: 300Mi
+---
+##################################################################################################
+# progress
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: progress
+spec:
+  ports:
+    - port: 7096
+  selector:
+    app: progress
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: progress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: progress
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: progress
+        version: v1
+    spec:
+      serviceAccountName: todos-pod
+      containers:
+        - name: progress
+          image: aparihar/todos-progress-tracker-microsvc-v2:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 7096
+          env:
+            - name: RDS_HOST
+              value: mysql.todos.svc.cluster.local
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: JWT_ACCESS_TOKEN
+          resources:
+            limits:
+              cpu: 512m
+              memory: 1024Mi
+            requests:
+              cpu: 200m
+              memory: 512Mi
 ---
 ##################################################################################################
 # database service
@@ -345,7 +335,7 @@ spec:
       serviceAccountName: todos-pod
       containers:
         - name: mysql
-          image: 785548451685.dkr.ecr.ap-south-1.amazonaws.com/todos:mysql-db-microsvc
+          image: aparihar/todos-mysql-db-microsvc:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3306
