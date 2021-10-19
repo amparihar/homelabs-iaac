@@ -132,7 +132,27 @@ spec:
   provider:
     virtualNode:
       virtualNodeRef:
-        name: group-vn
+        name: group-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: group-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 5096
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /api/group
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: group-vn
+              weight: 100
 ---
 ##################################################################################################
 # task service
@@ -176,7 +196,27 @@ spec:
   provider:
     virtualNode:
       virtualNodeRef:
-        name: task-vn
+        name: task-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: task-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 6096
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /api/task
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: task-vn
+              weight: 100
 ---
 ##################################################################################################
 # progress
@@ -217,7 +257,27 @@ spec:
   provider:
     virtualNode:
       virtualNodeRef:
-        name: progress-vn
+        name: progress-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: progress-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 7096
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /api/progress
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: progress-vn
+              weight: 100
 ---
 ##################################################################################################
 # GatewayRoute
@@ -243,7 +303,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/group"
+      prefix: "/"
     action:
       target:
         virtualService:
@@ -257,7 +317,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/task"
+      prefix: "/"
     action:
       target:
         virtualService:
@@ -271,7 +331,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/progress"
+      prefix: "/"
     action:
       target:
         virtualService:
