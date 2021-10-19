@@ -291,6 +291,11 @@ spec:
     match:
       prefix: "/api/user"
     action:
+      rewrite:
+        hostname:
+          defaultTargetHostname: "enabled"
+        prefix:
+          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -305,6 +310,11 @@ spec:
     match:
       prefix: "/api/group"
     action:
+      rewrite:
+        hostname:
+          defaultTargetHostname: "enabled"
+        prefix:
+          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -319,6 +329,11 @@ spec:
     match:
       prefix: "/api/task"
     action:
+      rewrite:
+        hostname:
+          defaultTargetHostname: "enabled"
+        prefix:
+          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -333,6 +348,11 @@ spec:
     match:
       prefix: "/api/progress"
     action:
+      rewrite:
+        hostname:
+          defaultTargetHostname: "enabled"
+        prefix:
+          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
