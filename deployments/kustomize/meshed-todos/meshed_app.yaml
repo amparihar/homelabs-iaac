@@ -83,7 +83,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /api/user
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:
@@ -147,7 +147,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /api/group
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:
@@ -211,7 +211,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /api/task
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:
@@ -272,7 +272,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /api/progress
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:
@@ -289,7 +289,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/"
+      prefix: "/api/user"
     action:
       target:
         virtualService:
@@ -303,7 +303,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/"
+      prefix: "/api/group"
     action:
       target:
         virtualService:
@@ -317,7 +317,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/"
+      prefix: "/api/task"
     action:
       target:
         virtualService:
@@ -331,7 +331,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/"
+      prefix: "/api/progress"
     action:
       target:
         virtualService:
