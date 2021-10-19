@@ -51,6 +51,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: database-vs
   serviceDiscovery:
     dns:
       hostname: user.todos.svc.cluster.local
@@ -62,9 +66,29 @@ metadata:
 spec:
   awsName: user.todos.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
-        name: user-vn
+    virtualRouter:
+      virtualRouterRef:
+        name: user-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: user-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 4096
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /api/user
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: user-vn
+              weight: 100
 ---
 ##################################################################################################
 # group service
@@ -205,7 +229,7 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/user"
+      prefix: "/"
     action:
       target:
         virtualService:
