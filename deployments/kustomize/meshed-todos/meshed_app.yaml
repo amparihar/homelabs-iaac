@@ -130,8 +130,8 @@ metadata:
 spec:
   awsName: group.todos.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
+    virtualRouter:
+      virtualRouterRef:
         name: group-vr
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
@@ -194,8 +194,8 @@ metadata:
 spec:
   awsName: task.todos.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
+    virtualRouter:
+      virtualRouterRef:
         name: task-vr
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
@@ -255,8 +255,8 @@ metadata:
 spec:
   awsName: progress.todos.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
+    virtualRouter:
+      virtualRouterRef:
         name: progress-vr
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
