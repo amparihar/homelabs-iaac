@@ -37,7 +37,7 @@ spec:
             - containerPort: 4096
           env:
             - name: RDS_HOST
-              value: mysql.todos.svc.cluster.local
+              value: http://mysql.todos.svc.cluster.local
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -361,7 +361,7 @@ spec:
                   name: database-connection-secret
                   key: RDS_PASSWORD
             - name: DATABASE_HOST
-              value: mysql.todos.svc.cluster.local
+              value: http://mysql.todos.svc.cluster.local
           resources:
             limits:
               cpu: 1024m

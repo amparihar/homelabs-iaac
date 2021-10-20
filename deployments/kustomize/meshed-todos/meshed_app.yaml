@@ -255,6 +255,9 @@ metadata:
 spec:
   awsName: progress.todos.svc.cluster.local
   provider:
+    virtualNode:
+      virtualNodeRef:
+        name: progress-vn
     virtualRouter:
       virtualRouterRef:
         name: progress-vr
@@ -289,13 +292,8 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/user"
+      prefix: "/user"
     action:
-      rewrite:
-        hostname:
-          defaultTargetHostname: "enabled"
-        prefix:
-          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -308,13 +306,8 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/group"
+      prefix: "/group"
     action:
-      rewrite:
-        hostname:
-          defaultTargetHostname: "enabled"
-        prefix:
-          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -327,13 +320,8 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/task"
+      prefix: "/task"
     action:
-      rewrite:
-        hostname:
-          defaultTargetHostname: "enabled"
-        prefix:
-          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
@@ -346,13 +334,8 @@ metadata:
 spec:
   httpRoute:
     match:
-      prefix: "/api/progress"
+      prefix: "/progress"
     action:
-      rewrite:
-        hostname:
-          defaultTargetHostname: "enabled"
-        prefix:
-          defaultPrefix: "disabled"
       target:
         virtualService:
           virtualServiceRef:
