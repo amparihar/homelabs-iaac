@@ -1,0 +1,8 @@
+resources:
+  - namespace.yaml
+  - service_account.yaml
+  - ingress_gateway.yaml
+  - base_api.yaml
+  - meshed_api.yaml
+
+namespace: todos-api
