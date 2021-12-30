@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: auth-config
-data:
-  JWT_ACCESS_TOKEN: "2d9a5ea7579b9839f5fa9659ce85da84ecd0d8fd6b8be1721553b4ef324a7fa7429f5558afe6b2a6c68ee3812a498c8431baea4682bd65476a320400bb08ec39"
----
