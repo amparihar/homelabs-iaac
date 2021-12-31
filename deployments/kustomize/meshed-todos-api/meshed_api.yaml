@@ -16,14 +16,14 @@ spec:
         protocol: http
   serviceDiscovery:
     dns:
-      hostname: mysql.todos-api.svc.cluster.local
+      hostname: database.todos-api.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
   name: database-vs
 spec:
-  awsName: mysql.todos-api.svc.cluster.local
+  awsName: database.todos-api.svc.cluster.local
   provider:
     virtualNode:
       virtualNodeRef:

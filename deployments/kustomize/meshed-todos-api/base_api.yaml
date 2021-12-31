@@ -37,7 +37,7 @@ kind: Deployment
 metadata:
   name: user
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: user
@@ -57,7 +57,7 @@ spec:
             - containerPort: 4096
           env:
             - name: RDS_HOST
-              value: mysql.todos-api.svc.cluster.local
+              value: database.todos-api.svc.cluster.local
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -111,7 +111,7 @@ kind: Deployment
 metadata:
   name: group
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: group
@@ -131,7 +131,7 @@ spec:
             - containerPort: 5096
           env:
             - name: RDS_HOST
-              value: mysql.todos-api.svc.cluster.local
+              value: database.todos-api.svc.cluster.local
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -189,7 +189,7 @@ kind: Deployment
 metadata:
   name: task
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: task
@@ -209,7 +209,7 @@ spec:
             - containerPort: 6096
           env:
             - name: RDS_HOST
-              value: mysql.todos-api.svc.cluster.local
+              value: database.todos-api.svc.cluster.local
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -267,7 +267,7 @@ kind: Deployment
 metadata:
   name: progress
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: progress
@@ -287,7 +287,7 @@ spec:
             - containerPort: 7096
           env:
             - name: RDS_HOST
-              value: mysql.todos-api.svc.cluster.local
+              value: database.todos-api.svc.cluster.local
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:

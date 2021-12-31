@@ -52,7 +52,7 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: envoy
-          image: 840364872350.dkr.ecr.us-west-2.amazonaws.com/aws-appmesh-envoy:v1.17.2.0
+          image: 840364872350.dkr.ecr.us-east-2.amazonaws.com/aws-appmesh-envoy:v1.17.2.0
           ports:
             - containerPort: 8080
           resources:
