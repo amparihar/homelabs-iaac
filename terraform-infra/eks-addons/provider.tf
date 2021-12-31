@@ -1,7 +1,3 @@
-terraform {
-  required_version = "~> 1.0.9"
-}
-
 data "aws_eks_cluster" "main" {
   name = var.cluster_name
 }

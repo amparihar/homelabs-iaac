@@ -24,13 +24,17 @@ terraform validate
 terraform plan -out <FILENAME2> -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> 
 terraform apply <FILENAME2>
 
-update "service_account.yaml" with the value of the output variable named "appmesh_controller_sa_arn"
+*******************************
+####  UPDATE "service_account.yaml" with the value of the output variable named "appmesh_controller_sa_arn" 
+*******************************
 
-3. Deleting the Cluster
+3. DELETING the Cluster
 First, delete the K8s resources followed by the EKS Cluster
 
+### DELETE add-ons
 cd eks-addons
 terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> 
 
+### DELETE eks
 cd eks
 terraform destroy -var-file=<FILENAME>

@@ -40,7 +40,7 @@ variable "app_namespaces" {
 
 variable app_xray_tracing_enabled {
   type = bool
-  default = true
+  default = false
   description = "Variable indicating whether x-ray tracing is enabled"
 }
 

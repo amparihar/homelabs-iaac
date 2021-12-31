@@ -1,7 +1,3 @@
-terraform {
-  required_version = "~> 1.0.9"
-}
-
 provider "aws" {
   region = var.aws_regions[var.aws_region]
 }
@@ -92,7 +88,9 @@ module "default_fargate_profile" {
   cluster_name           = module.cluster.eks_cluster_name
   subnet_ids             = module.vpc.private_subnet_ids
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
-  selectors              = [{ namespace = "default" }, { namespace = "calculator" }, { namespace = "bookinfo" }, { namespace = "todos" }]
+  selectors              = [{ namespace = "default" }, { namespace = "calculator" }, 
+                            { namespace = "bookinfo" }, { namespace = "todos" }, 
+                            { namespace = "todos-api" }]
 }
 
 output "default_fargate_profile_id" {
