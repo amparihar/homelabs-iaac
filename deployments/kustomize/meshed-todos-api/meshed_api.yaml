@@ -83,7 +83,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /
+          prefix: /api/user
         action:
           weightedTargets:
             - virtualNodeRef:
@@ -255,9 +255,7 @@ metadata:
 spec:
   awsName: progress.todos-api.svc.cluster.local
   provider:
-    virtualNode:
-      virtualNodeRef:
-        name: progress-vn
+    
     virtualRouter:
       virtualRouterRef:
         name: progress-vr

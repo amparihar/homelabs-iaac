@@ -51,7 +51,7 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: user
-          image: aparihar/todos-user-microsvc-v2:latest
+          image: aparihar/todos-user-microsvc-v3:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4096
