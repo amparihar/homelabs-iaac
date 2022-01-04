@@ -40,7 +40,7 @@ kind: Deployment
 metadata:
   name: envoy-proxy-ingress
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: envoy-ingress-gw
@@ -52,14 +52,14 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: envoy
-          image: 840364872350.dkr.ecr.us-east-2.amazonaws.com/aws-appmesh-envoy:v1.17.2.0
+          image: 840364872350.dkr.ecr.us-east-2.amazonaws.com/aws-appmesh-envoy:v1.19.0.0-prod
           ports:
             - containerPort: 8080
           resources:
             limits:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 512m
+              memory: 1024Mi
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 512m
+              memory: 1024Mi
 --- 
