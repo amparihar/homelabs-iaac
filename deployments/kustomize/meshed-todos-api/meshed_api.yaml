@@ -83,7 +83,7 @@ spec:
     - name: index-route
       httpRoute:
         match:
-          prefix: /api/user
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:

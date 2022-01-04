@@ -335,6 +335,7 @@ spec:
     - port: 3306
   selector:
     app: mysql
+  
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -381,7 +382,7 @@ spec:
                   name: database-connection-secret
                   key: RDS_PASSWORD
             - name: DATABASE_HOST
-              value: mysql.todos-api.svc.cluster.local
+              value: database.todos-api.svc.cluster.local
           resources:
             limits:
               cpu: 1024m

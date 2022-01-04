@@ -29,7 +29,7 @@ resource "helm_release" "app-mesh-controller" {
   chart            = var.appmesh_controller_helm_chart_name
   namespace        = var.appmesh_controller_namespace
   create_namespace = var.appmesh_controller_create_namespace
-  version          = var.appmesh_controller_helm_version
+  #version          = var.appmesh_controller_helm_version
 
   set {
     name  = "region"

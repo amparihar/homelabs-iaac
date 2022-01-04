@@ -33,6 +33,7 @@ resource "kubernetes_service_account" "load_balancer_controller" {
 
 # Create Cluster Role for Service Account
 resource "kubernetes_cluster_role" "load_balancer_controller" {
+  count = 0
   metadata {
     name = "aws-load-balancer-controller-cluster-role"
     labels = {
@@ -53,6 +54,7 @@ resource "kubernetes_cluster_role" "load_balancer_controller" {
 
 # Create Cluster role binding
 resource "kubernetes_cluster_role_binding" "load_balancer_controller" {
+  count = 0
   metadata {
     name = "aws-load-balancer-controller-cluster-rolebinding"
     labels = {
@@ -80,7 +82,7 @@ resource "helm_release" "load_balancer_controller" {
   namespace        = "kube-system"
   create_namespace = false
   skip_crds        = false
-  version          = "1.2.2"
+  #version          = "1.2.2"
 
   set {
     name  = "clusterName"
@@ -106,6 +108,11 @@ resource "helm_release" "load_balancer_controller" {
   set {
     name  = "vpcId"
     value = var.vpc_id
+  }
+  
+  set {
+    name  = "rbac.create"
+    value = "true"
   }
 
   set {
