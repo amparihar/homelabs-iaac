@@ -55,3 +55,8 @@ variable "app_kubernetes_external_secrets_enabled" {
   default     = false
   description = "Variable indicating whether k8s external secrets deployment is enabled"
 }
+
+variable "app_app_mesh_service_discovery_enabled" {
+  type        = bool
+  default     = false
+}

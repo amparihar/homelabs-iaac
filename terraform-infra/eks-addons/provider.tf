@@ -61,6 +61,18 @@ module "fargate_logging" {
   region_id    = var.aws_regions[var.aws_region]
 }
 
+module "cloud_map" {
+  source                  = "./modules/service-discovery"
+  app_name                = var.app_name
+  stage_name              = var.stage_name
+  vpc_id                  = var.vpc_id
+  enabled                 = var.app_app_mesh_service_discovery_enabled
+}
+
+output "database_fqdn" {
+  value = module.cloud_map.database_fqdn
+}
+
 module "app_mesh_controller" {
   source                     = "./modules/app-mesh-controller"
   app_name                   = var.app_name

@@ -15,16 +15,15 @@ spec:
         port: 3306
         protocol: http
   serviceDiscovery:
-    awsCloudMap:
-      namespaceName: todos-api.pvt.local
-      serviceName: database
+    dns:
+      hostname: database.todos-api.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
   name: database-vs
 spec:
-  awsName: database.todos-api.hosted.local
+  awsName: database.todos-api.svc.cluster.local
   provider:
     virtualNode:
       virtualNodeRef:
