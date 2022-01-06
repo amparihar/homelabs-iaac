@@ -51,13 +51,13 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: user
-          image: aparihar/todos-user-microsvc-v3:latest
+          image: aparihar/todos-user-microsvc-v2:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4096
           env:
             - name: RDS_HOST
-              value: database.todos-api.svc.cluster.local
+              value: "database.todos-api.svc.cluster.local"
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -382,7 +382,7 @@ spec:
                   name: database-connection-secret
                   key: RDS_PASSWORD
             - name: DATABASE_HOST
-              value: database.todos-api.svc.cluster.local
+              value: "database.todos-api.svc.cluster.local"
           resources:
             limits:
               cpu: 1024m

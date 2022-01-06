@@ -56,20 +56,20 @@ resource "helm_release" "app-mesh-controller" {
     value = "x-ray"
   }
 
-  # set {
-  #   name  = "image.repository"
-  #   value = "602401143452.dkr.ecr.${var.region_id}.amazonaws.com/amazon/appmesh-controller"
-  # }
+  set {
+    name  = "image.repository"
+    value = "602401143452.dkr.ecr.${var.region_id}.amazonaws.com/amazon/appmesh-controller"
+  }
 
-  # set {
-  #   name  = "sidecar.image"
-  #   value = "840364872350.dkr.ecr.${var.region_id}.amazonaws.com/aws-appmesh-envoy"
-  # }
+  set {
+    name  = "sidecar.image.repository"
+    value = "840364872350.dkr.ecr.${var.region_id}.amazonaws.com/aws-appmesh-envoy"
+  }
 
-  # set {
-  #   name  = "init.image"
-  #   value = "840364872350.dkr.ecr.${var.region_id}.amazonaws.com/aws-appmesh-proxy-route-manager"
-  # }
+  set {
+    name  = "init.image.repository"
+    value = "840364872350.dkr.ecr.${var.region_id}.amazonaws.com/aws-appmesh-proxy-route-manager"
+  }
 
   depends_on = [
     kubernetes_service_account.appmesh_controller
