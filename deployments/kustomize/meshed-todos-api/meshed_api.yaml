@@ -2,32 +2,32 @@
 ##################################################################################################
 # database
 ##################################################################################################
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualNode
-metadata:
-  name: database-vn
-spec:
-  podSelector:
-    matchLabels:
-      app: mysql
-  listeners:
-    - portMapping:
-        port: 3306
-        protocol: http
-  serviceDiscovery:
-    dns:
-      hostname: database.todos-api.svc.cluster.local
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualService
-metadata:
-  name: database-vs
-spec:
-  awsName: database.todos-api.svc.cluster.local
-  provider:
-    virtualNode:
-      virtualNodeRef:
-        name: database-vn
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualNode
+# metadata:
+#   name: database-vn
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: mysql
+#   listeners:
+#     - portMapping:
+#         port: 3306
+#         protocol: http
+#   serviceDiscovery:
+#     dns:
+#       hostname: database.todos-api.svc.cluster.local
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualService
+# metadata:
+#   name: database-vs
+# spec:
+#   awsName: database.todos-api.svc.cluster.local
+#   provider:
+#     virtualNode:
+#       virtualNodeRef:
+#         name: database-vn
 ---
 ##################################################################################################
 # user 
@@ -51,10 +51,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: database-vs
+  # backends:
+  #   - virtualService:
+  #       virtualServiceRef:
+  #         name: database-vs
   serviceDiscovery:
     dns:
       hostname: user.todos-api.svc.cluster.local
@@ -116,9 +116,9 @@ spec:
     - virtualService:
         virtualServiceRef:
           name: progress-vs
-    - virtualService:
-        virtualServiceRef:
-          name: database-vs
+    # - virtualService:
+    #     virtualServiceRef:
+    #       name: database-vs
   serviceDiscovery:
     dns:
       hostname: group.todos-api.svc.cluster.local
@@ -180,9 +180,9 @@ spec:
     - virtualService:
         virtualServiceRef:
           name: progress-vs
-    - virtualService:
-        virtualServiceRef:
-          name: database-vs
+    # - virtualService:
+    #     virtualServiceRef:
+    #       name: database-vs
   serviceDiscovery:
     dns:
       hostname: task.todos-api.svc.cluster.local
@@ -240,10 +240,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: database-vs
+  # backends:
+  #   - virtualService:
+  #       virtualServiceRef:
+  #         name: database-vs
   serviceDiscovery:
     dns:
       hostname: progress.todos-api.svc.cluster.local

@@ -47,8 +47,10 @@ spec:
       labels:
         app: user
         version: v1
+      
     spec:
       serviceAccountName: todos-api-pod
+      
       containers:
         - name: user
           image: aparihar/todos-user-microsvc-v2:latest
@@ -131,7 +133,7 @@ spec:
             - containerPort: 5096
           env:
             - name: RDS_HOST
-              value: database.todos-api.svc.cluster.local
+              value: "database.todos-api.svc.cluster.local"
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -160,7 +162,7 @@ spec:
                   name: auth-config
                   key: JWT_ACCESS_TOKEN
             - name: PROGRESS_TRACKER_API_HOST
-              value: progress.todos-api.svc.cluster.local
+              value: "progress.todos-api.svc.cluster.local"
             - name: PROGRESS_TRACKER_API_PORT
               value: "7096"
           resources:
@@ -209,7 +211,7 @@ spec:
             - containerPort: 6096
           env:
             - name: RDS_HOST
-              value: database.todos-api.svc.cluster.local
+              value: "database.todos-api.svc.cluster.local"
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -238,7 +240,7 @@ spec:
                   name: auth-config
                   key: JWT_ACCESS_TOKEN
             - name: PROGRESS_TRACKER_API_HOST
-              value: progress.todos-api.svc.cluster.local
+              value: "progress.todos-api.svc.cluster.local"
             - name: PROGRESS_TRACKER_API_PORT
               value: "7096"
           resources:
@@ -287,7 +289,7 @@ spec:
             - containerPort: 7096
           env:
             - name: RDS_HOST
-              value: database.todos-api.svc.cluster.local
+              value: "database.todos-api.svc.cluster.local"
             - name: RDS_PORT
               valueFrom:
                 secretKeyRef:
@@ -352,6 +354,8 @@ spec:
       labels:
         app: mysql
         version: v1
+      annotations:
+        appmesh.k8s.aws/sidecarInjectorWebhook: disabled
     spec:
       serviceAccountName: todos-api-pod
       containers:
