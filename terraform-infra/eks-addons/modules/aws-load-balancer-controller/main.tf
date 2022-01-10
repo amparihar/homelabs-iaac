@@ -82,7 +82,7 @@ resource "helm_release" "load_balancer_controller" {
   namespace        = "kube-system"
   create_namespace = false
   skip_crds        = false
-  #version          = "1.2.2"
+  version          = "1.3.2"
 
   set {
     name  = "clusterName"

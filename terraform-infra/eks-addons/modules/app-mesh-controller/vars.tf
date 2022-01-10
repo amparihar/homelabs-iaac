@@ -40,7 +40,7 @@ variable "appmesh_controller_helm_repo_url" {
 }
 variable "appmesh_controller_helm_version" {
   type        = string
-  default     = "1.4.2"
+  default     = "1.4.4"
   description = "Heml version"
 }
 
