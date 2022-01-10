@@ -35,7 +35,7 @@ resource "helm_release" "kubernetes_external_secrets" {
   version          = var.kubernetes_external_secrets_helm_version
 
   set {
-    name  = "AWS_REGION"
+    name  = "env.AWS_REGION"
     value = var.region_id
   }
   set {
@@ -46,6 +46,11 @@ resource "helm_release" "kubernetes_external_secrets" {
     name  = "serviceAccount.name"
     value = "kubernetes-external-secrets"
   }
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
+  
   # set {
   #   name  = "serviceAccount.annotations\\.eks\\.amazonaws\\.com/role-arn"
   #   value = var.service_account_role_arn
