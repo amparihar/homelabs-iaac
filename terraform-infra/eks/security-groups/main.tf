@@ -7,6 +7,7 @@ locals {
 
 resource "aws_security_group" "envoy_proxy" {
   count  = var.create_vpc ? 1 : 0
+  
   name   = "${var.app_name}-sg-envoy-proxy-nlb-${var.stage_name}"
   vpc_id = var.vpcid
 
