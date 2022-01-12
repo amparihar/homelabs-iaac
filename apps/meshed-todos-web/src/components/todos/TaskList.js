@@ -32,9 +32,9 @@ const WrappedTaskList = ({
                 text={`${progresspercent}%`}
                 strokeWidth={12}
                 styles={buildStyles({
-                  textColor: 'orangered',
-                  pathColor: `#28a745`,
-                  trailColor: `#dc3545`,
+                  textColor: 'red',
+                  pathColor: `turquoise`,
+                  trailColor: `gold`,
                   textSize: '25px',
                 })}
               />

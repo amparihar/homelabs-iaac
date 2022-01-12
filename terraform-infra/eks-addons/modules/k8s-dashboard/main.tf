@@ -6,7 +6,7 @@ resource "helm_release" "k8s_dashboard" {
   repository = var.k8s_dashboard_helm_repo_url
   chart      = var.k8s_dashboard_helm_chart_name
   # this chart version is fully compatible with k8s version 1.19
-  version          = "3.0.1"
+  version          = "5.0.4"
   namespace        = var.k8s_dashboard_namespace
   create_namespace = var.k8s_dashboard_create_namespace
 
