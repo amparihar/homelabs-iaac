@@ -12,6 +12,13 @@ data "aws_iam_policy_document" "k8s_sa_assume_role_iam_policy" {
       variable = "${replace(var.oidc_url, "https://", "")}:sub"
       values   = ["system:serviceaccount:*"]
     }
+    
+    # allow specific service account in a namespace to assume the role
+    #condition {
+    #  test     = "StringLike"
+    #  variable = "${replace(var.oidc_url, "https://", "")}:sub"
+    #  values   = ["system:serviceaccount:[namespace]:[serviceaccountname]"]
+    #}
 
     condition {
       test     = "StringLike"
