@@ -337,6 +337,7 @@ kind: Deployment
 metadata:
   name: database
 spec:
+  
   replicas: 1
   selector:
     matchLabels:
@@ -350,7 +351,12 @@ spec:
       annotations:
         appmesh.k8s.aws/sidecarInjectorWebhook: disabled
     spec:
+      
       serviceAccountName: todos-api-pod
+      # volumes:
+      #   - name: efs
+      #     persistentVolumeClaim:
+      #       claimName: todos-api-claim
       containers:
         - name: mysql
           image: aparihar/todos-mysql-db-microsvc:latest
@@ -380,6 +386,9 @@ spec:
                   key: RDS_PASSWORD
             - name: DATABASE_HOST
               value: "database.todos-api.svc.cluster.local"
+          # volumeMounts:
+          #   - name: efs
+          #     mountPath: /mysql-data
           resources:
             limits:
               cpu: 1024m
@@ -387,4 +396,5 @@ spec:
             requests:
               cpu: 1024m
               memory: 1024Mi
+        
 ---

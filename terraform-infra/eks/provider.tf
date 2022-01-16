@@ -41,6 +41,14 @@ module "efs" {
   create_efs                     = var.app_create_efs
 }
 
+output "efs_id" {
+  value = module.efs.id
+}
+
+output "efs_dns_name" {
+  value = module.efs.dns_name
+}
+
 module "security-groups" {
   source                         = "./security-groups"
   app_name                       = var.app_name

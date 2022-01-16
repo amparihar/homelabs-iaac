@@ -1,0 +1,42 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: todos-api-efs-sc
+provisioner: efs.csi.aws.com
+---
+# How is the physical storage implemented
+# PV is a cluster resource, manually provisioned by the cluster admin
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: todos-api-pv
+spec:
+  storageClassName: todos-api-efs-sc
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 5Mi
+  persistentVolumeReclaimPolicy: Delete
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: [EFS Filesystem ID]
+---
+
+# What is being claimed?
+# It is a request for storage by a pod that can be fulfilled by a PV
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: todos-api-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Mi
+  storageClassName: todos-api-efs-sc
+  
+---

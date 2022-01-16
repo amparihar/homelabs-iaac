@@ -30,3 +30,11 @@ resource "aws_efs_mount_target" "private" {
   security_groups   = [element(aws_security_group.efs_sg.*.id, count.index)]
 }
 
+output "id" {
+  value = var.create_efs ? aws_efs_file_system.main.*.id : []
+}
+
+output "dns_name" {
+  value = var.create_efs ? aws_efs_file_system.main.*.dns_name : []
+}
+

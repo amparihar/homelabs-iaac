@@ -1,5 +1,6 @@
 resources:
   - namespace.yaml
+  #- create_storage.yaml
   - service_account.yaml
   - ingress_gateway.yaml
   - base_api.yaml
