@@ -49,3 +49,6 @@ variable "app_ingress_gateway_container_port" {
   type    = number
   default = 8080
 }
+variable "app_create_efs" {
+  type = bool
+}

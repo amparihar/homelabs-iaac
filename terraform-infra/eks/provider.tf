@@ -30,6 +30,17 @@ output "private_subnet_ids" {
   value = module.vpc.private_subnet_ids
 }
 
+# elastic file service
+module "efs" {
+  source                         = "./efs"
+  app_name                       = var.app_name
+  stage_name                     = var.stage_name
+  vpcid                          = module.vpc.vpcid[0]
+  private_subnets                = var.private_subnets
+  private_subnet_ids             = module.vpc.private_subnet_ids
+  create_efs                     = var.app_create_efs
+}
+
 module "security-groups" {
   source                         = "./security-groups"
   app_name                       = var.app_name
