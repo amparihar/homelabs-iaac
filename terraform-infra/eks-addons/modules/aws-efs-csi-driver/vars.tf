@@ -10,7 +10,7 @@ variable "helm_release_name" {
 }
 variable "helm_repo_url" {
     type = string
-    default = "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
+    default = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
 }
 variable "helm_chart_name" {
     type = string

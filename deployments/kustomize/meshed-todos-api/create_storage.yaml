@@ -17,8 +17,8 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 5Mi
-  persistentVolumeReclaimPolicy: Delete
+    storage: 1Mi
+  persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
     volumeHandle: [EFS Filesystem ID]
@@ -32,11 +32,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: todos-api-claim
 spec:
+  storageClassName: todos-api-efs-sc
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Mi
-  storageClassName: todos-api-efs-sc
+      storage: 1Mi
   
 ---

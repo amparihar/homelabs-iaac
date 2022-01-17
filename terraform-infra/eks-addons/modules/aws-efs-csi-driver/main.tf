@@ -17,6 +17,7 @@ resource "aws_iam_role_policy_attachment" "aws_efs_csi_driver_sa" {
 }
 
 # container storage interface
+# not supported on Fargate due to nonprivilege security context
 resource "helm_release" "aws_efs_csi_driver" {
   count             = var.enabled ? 1 : 0
 
@@ -24,14 +25,35 @@ resource "helm_release" "aws_efs_csi_driver" {
   repository        = var.helm_repo_url
   chart             = var.helm_chart_name
  
-  version           = "2.2.1"
+  version           = "2.2.2"
   namespace         = var.namespace
   create_namespace  = var.create_namespace
   
   set {
-     name  = "serviceAccount.annotations\\.eks\\.amazonaws\\.com/role-arn"
-     value = element(aws_iam_role.aws_efs_csi_driver_sa.*.arn, count.index)
+    name = "image.repository"
+    value = "602401143452.dkr.ecr.${var.region_id}.amazonaws.com/eks/aws-efs-csi-driver"
   }
   
+  set {
+    name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = element(aws_iam_role.aws_efs_csi_driver_sa.*.arn, count.index)
+  }
+
+  set {
+    name  = "controller.serviceAccount.create"
+    value = "true"
+  }
+  
+  set {
+    name = "node.serviceAccount.create"
+    # We're using the same service account for both the nodes and controllers,
+    # and we're already creating the service account in the controller config
+    # above.
+    value = "false"
+  }
+}
+
+output "efs_csi_controller_sa_role_arn" {
+  value = aws_iam_role.aws_efs_csi_driver_sa.*.arn
 }
 

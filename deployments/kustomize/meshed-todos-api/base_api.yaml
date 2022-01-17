@@ -388,7 +388,7 @@ spec:
               value: "database.todos-api.svc.cluster.local"
           # volumeMounts:
           #   - name: efs
-          #     mountPath: /mysql-data
+          #     mountPath: /var/lib/mysql
           resources:
             limits:
               cpu: 1024m

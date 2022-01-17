@@ -57,3 +57,7 @@ variable "app_app_mesh_service_discovery_enabled" {
   type        = bool
   description = "Variable indicating whether to use cloud map based service discovery with appmesh"
 }
+variable "app_aws_efs_csi_driver_enabled" {
+  type        = bool
+  description = "Variable indicating whether container storage interface(CSI) driver is enabled"
+}
