@@ -31,6 +31,8 @@ output "private_subnet_ids" {
 }
 
 # elastic file service
+# Create the Amazon EFS Network file system before you can use the CSI driver to mount it inside a container as a persistent volume. 
+# Currently, the CSI driver doesn’t provision the Amazon EFS file system automatically.
 module "efs" {
   source                         = "./efs"
   app_name                       = var.app_name

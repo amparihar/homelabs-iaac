@@ -21,7 +21,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: [EFS Filesystem ID]
+    volumeHandle: fs-[efs filesystemid]
 ---
 
 # What is being claimed?
@@ -32,7 +32,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: todos-api-claim
 spec:
-  storageClassName: todos-api-efs-sc
+  storageClassName: ""
   accessModes:
     - ReadWriteMany
   resources:
