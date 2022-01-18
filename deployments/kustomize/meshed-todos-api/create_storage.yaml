@@ -1,8 +1,9 @@
+# SC and PV are cluster resources and deployed in the default ns
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: todos-api-efs-sc
+  name: kluster-sc
 provisioner: efs.csi.aws.com
 ---
 # How is the physical storage implemented
@@ -10,9 +11,9 @@ provisioner: efs.csi.aws.com
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: todos-api-pv
+  name: kluster-pv
 spec:
-  storageClassName: todos-api-efs-sc
+  storageClassName: kluster-sc
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -21,22 +22,5 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: fs-[efs filesystemid]
----
-
-# What is being claimed?
-# It is a request for storage by a pod that can be fulfilled by a PV
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: todos-api-claim
-spec:
-  storageClassName: ""
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Mi
-  
+    volumeHandle: fs-
 ---

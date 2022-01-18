@@ -1,0 +1,16 @@
+---
+# What is being claimed?
+# It is a request for storage by a pod that can be fulfilled by a PV
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: todos-api-database-claim
+spec:
+  storageClassName: kluster-sc
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+---

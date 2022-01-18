@@ -356,7 +356,7 @@ spec:
       # volumes:
       #   - name: efs
       #     persistentVolumeClaim:
-      #       claimName: todos-api-claim
+      #       claimName: todos-api-database-claim
       containers:
         - name: mysql
           image: aparihar/todos-mysql-db-microsvc:latest
