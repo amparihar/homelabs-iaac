@@ -1,5 +1,6 @@
 console.log("Initializing simple Calculator microservice");
 
+const fs = require("fs").promises;
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
@@ -22,8 +23,22 @@ app.use(express.json());
 app.use(XRayExpress.openSegment("Simple Calculator Microservice"));
 
 function handlerFn(req, res, next) {
+  const dataPath = path.join(process.env.DATA_PATH || "./data.txt");
+  fs.readFile(dataPath)
+  .then(buffer => {
+    const data = buffer.toString();
+    writeTo(dataPath, +data + 1);
+  })
+  .catch(e => {
+    console.log("file not found, writing '0' to a new file");
+    writeTo(dataPath, 0);
+  });
   next();
 }
+
+const writeTo = (dataPath, data) => {
+  fs.writeFile(dataPath, data.toString()).catch(console.error);
+};
 
 // Initial Route
 app.get("/", handlerFn, function (req, res) {
