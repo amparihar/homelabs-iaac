@@ -43,10 +43,23 @@ spec:
       
     spec:
       serviceAccountName: todos-api-pod
-      
+      # initContainers:
+      #   - name: init-database
+      #     image: busybox:1.35.0
+      #     imagePullPolicy: IfNotPresent
+      #     command: ["/bin/sh"]
+      #     args:
+      #       - "-c"
+      #       - "while ! dig database; do echo Waiting for database...; sleep 2;done"
       containers:
         - name: user
           image: aparihar/todos-user-microsvc-v2:latest
+          readinessProbe:
+            httpGet:
+              path: /api/user/health-check
+              port: 4096
+            initialDelaySeconds: 5
+            periodSeconds: 10
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4096
