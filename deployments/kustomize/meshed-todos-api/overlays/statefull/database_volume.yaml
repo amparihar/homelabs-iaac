@@ -1,0 +1,19 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  template:
+    spec:
+      volumes:
+        - name: efs
+          persistentVolumeClaim:
+            claimName: todos-api-database-claim
+      
+      containers:
+        - name: mysql
+          volumeMounts:
+            - name: efs
+              mountPath: /var/lib/mysql
+  ---

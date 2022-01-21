@@ -364,12 +364,8 @@ spec:
       annotations:
         appmesh.k8s.aws/sidecarInjectorWebhook: disabled
     spec:
-      
       serviceAccountName: todos-api-pod
-      # volumes:
-      #   - name: efs
-      #     persistentVolumeClaim:
-      #       claimName: todos-api-database-claim
+      
       initContainers:
         - name: init-database
           image: busybox:1.35.0
@@ -407,9 +403,7 @@ spec:
                   key: RDS_PASSWORD
             - name: DATABASE_HOST
               value: "database.todos-api.svc.cluster.local"
-          # volumeMounts:
-          #   - name: efs
-          #     mountPath: /var/lib/mysql
+          
           resources:
             limits:
               cpu: 1024m

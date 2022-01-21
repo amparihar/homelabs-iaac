@@ -1,11 +1,8 @@
 resources:
   - namespace.yaml
   - mesh.yaml
-  #- claim.yaml
   - service_account.yaml
   - ingress_gateway.yaml
   - base_api.yaml
   - meshed_api.yaml
   - external_secrets.yaml
-
-namespace: todos-api

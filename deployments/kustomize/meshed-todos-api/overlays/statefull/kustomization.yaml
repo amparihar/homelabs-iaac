@@ -1,0 +1,7 @@
+resources:
+  - claim.yaml
+  
+patchesStrategicMerge:
+  - database_volume.yaml
+  
+namespace: todos-api
