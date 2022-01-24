@@ -365,15 +365,6 @@ spec:
         appmesh.k8s.aws/sidecarInjectorWebhook: disabled
     spec:
       serviceAccountName: todos-api-pod
-      
-      initContainers:
-        - name: init-database
-          image: busybox:1.35.0
-          imagePullPolicy: IfNotPresent
-          command: ["/bin/sh"]
-          args:
-            - "-c"
-            - "do echo Waiting for pvc...; sleep 30;done"
       containers:
         - name: mysql
           image: aparihar/todos-mysql-db-microsvc:latest

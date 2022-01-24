@@ -1,3 +1,6 @@
+bases:
+    - ../../base
+    
 resources:
   - claim.yaml
   

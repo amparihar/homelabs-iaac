@@ -10,10 +10,17 @@ spec:
         - name: efs
           persistentVolumeClaim:
             claimName: todos-api-database-claim
-      
+      initContainers:
+        - name: init-database
+          image: busybox:1.35.0
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - "echo sleeping; sleep 5"
       containers:
         - name: mysql
           volumeMounts:
             - name: efs
               mountPath: /var/lib/mysql
-  ---
+---
