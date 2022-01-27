@@ -131,10 +131,10 @@ spec:
         version: v1
     spec:
       serviceAccountName: todos-api-pod
-      volumes:
-        - name: cwagentconfig
-          configMap:
-            name: cwagentconfig-sidecar
+      # volumes:
+      #   - name: cwagentconfig
+      #     configMap:
+      #       name: cwagentconfig-sidecar
       containers:
         - name: group
           image: aparihar/todos-group-microsvc-v2:latest
@@ -182,24 +182,24 @@ spec:
             requests:
               cpu: 256m
               memory: 300Mi
-        - name: cloudwatch-agent
-          image: amazon/cloudwatch-agent:latest
-          imagePullPolicy: Always
-          env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-          resources:
-            limits:
-              cpu:  100m
-              memory: 100Mi
-            requests:
-              cpu: 32m
-              memory: 24Mi
-          volumeMounts:
-            - name: cwagentconfig
-              mountPath: /etc/cwagentconfig
+        # - name: cloudwatch-agent
+        #   image: amazon/cloudwatch-agent:latest
+        #   imagePullPolicy: Always
+        #   env:
+        #     - name: POD_NAME
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: metadata.name
+        #   resources:
+        #     limits:
+        #       cpu:  100m
+        #       memory: 100Mi
+        #     requests:
+        #       cpu: 32m
+        #       memory: 24Mi
+        #   volumeMounts:
+        #     - name: cwagentconfig
+        #       mountPath: /etc/cwagentconfig
 ---
 ##################################################################################################
 # task service
