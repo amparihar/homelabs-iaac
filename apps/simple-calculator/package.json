@@ -14,7 +14,8 @@
     "aws-xray-sdk": "^3.3.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "joi": "^17.2.1"
+    "joi": "^17.2.1",
+    "prom-client": "^14.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

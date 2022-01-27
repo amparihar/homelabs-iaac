@@ -1,5 +1,6 @@
 console.log("Initializing simple Calculator microservice");
 
+const prometheus = require("prom-client");
 const fs = require("fs").promises;
 const path = require("path");
 const express = require("express");
