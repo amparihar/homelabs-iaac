@@ -6,7 +6,6 @@ const register = new prometheus.Registry();
 register.setDefaultLabels({
   app: 'simple-calculator'
 });
-
 // Enable the collection of default metrics
 prometheus.collectDefaultMetrics({ register });
 
@@ -14,7 +13,6 @@ const no_of_add_api_requests = new prometheus.Counter({
   name : "no_of_add_api_requests",
   help: "no_of_add_api_requests"
 });
-
 register.registerMetric(no_of_add_api_requests);
 
 var ping = async (req, res, next) => {

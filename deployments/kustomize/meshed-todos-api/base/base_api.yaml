@@ -53,7 +53,7 @@ spec:
       #       - "while ! dig database; do echo Waiting for database...; sleep 2;done"
       containers:
         - name: user
-          image: aparihar/todos-user-microsvc-v2:latest
+          image: aparihar/todos-user-microsvc:3.0
           readinessProbe:
             httpGet:
               path: /api/user/health-check
@@ -129,6 +129,10 @@ spec:
       labels:
         app: group
         version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /api/group/metrics
+        prometheus.io/port: "5096"
     spec:
       serviceAccountName: todos-api-pod
       # volumes:
@@ -137,7 +141,7 @@ spec:
       #       name: cwagentconfig-sidecar
       containers:
         - name: group
-          image: aparihar/todos-group-microsvc-v2:latest
+          image: aparihar/todos-group-microsvc:3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096
