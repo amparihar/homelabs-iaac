@@ -27,6 +27,8 @@ async function validateDivisionOperationSchema(req, res, next) {
 var routes = function (app, handlerfn) {
   app.route("/api/calculator/ping").get(handlerfn, controller.ping);
 
+  app.route("/api/calculator/metrics").get(handlerfn, controller.metrics);
+
   app
     .route("/api/calculator/add")
     .post([handlerfn, validateOperationSchema], controller.add);

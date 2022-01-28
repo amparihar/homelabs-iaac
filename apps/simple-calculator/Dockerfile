@@ -10,4 +10,4 @@ WORKDIR /app
 
 EXPOSE 9001
 
-CMD ["npm", "run", "start-server"]
+CMD ["/app/src/server.js"]
