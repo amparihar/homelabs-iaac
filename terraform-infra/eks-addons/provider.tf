@@ -100,3 +100,8 @@ module "efs_container_storage_interface_driver" {
   enabled                 = var.app_aws_efs_csi_driver_enabled
 }
 
+module "prometheus" {
+  source                  = "./modules/prometheus"
+  enabled                 = var.app_prometheus_enabled
+}
+

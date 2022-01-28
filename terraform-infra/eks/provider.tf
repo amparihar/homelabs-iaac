@@ -101,11 +101,11 @@ output "eks_cluster_status" {
   value = module.cluster.eks_cluster_status
 }
 
-module "default_fargate_profile" {
+module "app_fargate_profile" {
   source                 = "./fargate"
   app_name               = var.app_name
   stage_name             = var.stage_name
-  profile_name           = "fp-default"
+  profile_name           = "fp-app"
   cluster_name           = module.cluster.eks_cluster_name
   subnet_ids             = module.vpc.private_subnet_ids
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
@@ -114,12 +114,12 @@ module "default_fargate_profile" {
                             { namespace = "todos-api" }]
 }
 
-output "default_fargate_profile_id" {
-  value = module.default_fargate_profile.id
+output "app_fargate_profile_id" {
+  value = module.app_fargate_profile.id
 }
 
-output "default_fargate_profile_status" {
-  value = module.default_fargate_profile.status
+output "app_fargate_profile_status" {
+  value = module.app_fargate_profile.status
 }
 
 module "core_fargate_profile" {
@@ -131,12 +131,11 @@ module "core_fargate_profile" {
   subnet_ids             = module.vpc.private_subnet_ids
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
   selectors = [
-    { namespace = "kube-system" },
-    { namespace = "kubernetes-dashboard" },
-    { namespace = "appmesh-system" },
-    { namespace = "aws-observability" },
-    { namespace = "external-secrets" }
-  ]
+                { namespace = "kube-system" },
+                { namespace = "kubernetes-dashboard" },
+                { namespace = "appmesh-system" },
+                { namespace = "external-secrets" }
+              ]
   # selectors            = [{ namespace = "kube-system", labels = { k8s-app = "kube-dns" } }]
 }
 
@@ -146,4 +145,26 @@ output "core_fargate_profile_id" {
 
 output "core_fargate_profile_status" {
   value = module.core_fargate_profile.status
+}
+
+module "observability_fargate_profile" {
+  source                 = "./fargate"
+  app_name               = var.app_name
+  stage_name             = var.stage_name
+  profile_name           = "fp-observability"
+  cluster_name           = module.cluster.eks_cluster_name
+  subnet_ids             = module.vpc.private_subnet_ids
+  pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
+  selectors = [
+                { namespace = "aws-observability" },
+                { namespace = "prometheus" }
+              ]
+}
+
+output "observability_fargate_profile_id" {
+  value = module.observability_fargate_profile.id
+}
+
+output "observability_fargate_profile_status" {
+  value = module.observability_fargate_profile.status
 }

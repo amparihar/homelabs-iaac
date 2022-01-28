@@ -61,3 +61,6 @@ variable "app_aws_efs_csi_driver_enabled" {
   type        = bool
   description = "Variable indicating whether container storage interface(CSI) driver is enabled"
 }
+variable "app_prometheus_enabled" {
+  type        = bool
+}

@@ -10,4 +10,4 @@ private_networking                  = true
 multi_az_deployment                 = true
 cluster_name                        = "meshed-todos-api-kluster"
 app_ingress_gateway_container_port  = 8080
-app_create_efs                      = true
+app_create_efs                      = false
