@@ -1,6 +1,5 @@
 resources:
   - namespace.yaml
-  - config_maps.yaml
   - mesh.yaml
   - service_account.yaml
   - ingress_gateway.yaml
