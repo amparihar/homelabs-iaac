@@ -157,7 +157,8 @@ module "observability_fargate_profile" {
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
   selectors = [
                 { namespace = "aws-observability" },
-                { namespace = "prometheus" }
+                { namespace = "prometheus" },
+                { namespace = "amazon-cloudwatch" }
               ]
 }
 

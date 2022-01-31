@@ -46,12 +46,6 @@ resource "aws_iam_role_policy_attachment" "CloudWatchLogsFullAccess" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
-# Cloudwatch agent
-# resource "aws_iam_role_policy_attachment" "CloudWatchLogsFullAccess" {
-#   role       = aws_iam_role.sa.name
-#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-# }
-
 # kubernetes external secrets role & policies
 resource "aws_iam_policy" "kubernetes_external_secrets_sa" {
   count  = var.kubernetes_external_secrets_enabled ? 1 : 0

@@ -5,3 +5,4 @@ app_app_mesh_service_discovery_enabled=false
 
 app_aws_efs_csi_driver_enabled=false
 app_prometheus_enabled=true
+app_cwagent_prometheus_enabled=false

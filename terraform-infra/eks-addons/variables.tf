@@ -64,3 +64,6 @@ variable "app_aws_efs_csi_driver_enabled" {
 variable "app_prometheus_enabled" {
   type        = bool
 }
+variable "app_cwagent_prometheus_enabled" {
+  type = bool
+}

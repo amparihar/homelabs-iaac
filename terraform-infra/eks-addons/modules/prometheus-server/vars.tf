@@ -1,7 +1,7 @@
 
 variable "enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Variable indicating whether deployment is enabled"
 }
 

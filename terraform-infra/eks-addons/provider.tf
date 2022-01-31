@@ -101,7 +101,14 @@ module "efs_container_storage_interface_driver" {
 }
 
 module "prometheus" {
-  source                  = "./modules/prometheus"
+  source                  = "./modules/prometheus-server"
   enabled                 = var.app_prometheus_enabled
+}
+
+module "cwagent_prometheus" {
+  source                  = "./modules/cwagent-prometheus"
+  enabled                 = var.app_cwagent_prometheus_enabled
+  cluster_name            = data.aws_eks_cluster.main.name
+  region_name             = var.aws_regions[var.aws_region]
 }
 
