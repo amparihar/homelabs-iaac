@@ -37,7 +37,13 @@ terraform apply <FILENAME2>
 ####  UPDATE "service_account.yaml" with the value of the output variable named "appmesh_controller_sa_arn" 
 *******************************
 
-3. DELETING the Cluster
+3. Deployment
+cd ../../deployment/kustomize/meshed-todos-api/overlays
+kubectl apply -k stateless/
+
+4. kubectl delete -k stateless/
+
+5. DELETING the Cluster
 First, delete the K8s resources followed by the EKS Cluster
 
 ### DELETE add-ons

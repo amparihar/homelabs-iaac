@@ -10,7 +10,7 @@ resource "aws_iam_role_policy_attachment" "cwagent_prometheus_sa" {
 }
 
 resource "kubernetes_namespace" "cwagent_prometheus" {
-  count = enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
   metadata {
     annotations = {
       name = var.namespace

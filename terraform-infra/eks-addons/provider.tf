@@ -108,6 +108,7 @@ module "prometheus" {
 module "cwagent_prometheus" {
   source                  = "./modules/cwagent-prometheus"
   enabled                 = var.app_cwagent_prometheus_enabled
+  irsa_assume_role_policy = module.irsa.assume_role_policy
   cluster_name            = data.aws_eks_cluster.main.name
   region_name             = var.aws_regions[var.aws_region]
 }

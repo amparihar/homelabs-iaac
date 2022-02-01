@@ -2,9 +2,12 @@ variable "enabled" {
     type = bool
     default = false
 }
+variable "irsa_assume_role_policy" {
+    type = string
+}
 variable "helm_release_name" {
     type = string
-    default = "cwagent_prometheus"
+    default = "cwagent-prometheus"
 }
 variable "service_account_name" {
     type = string
