@@ -182,10 +182,10 @@ spec:
           resources:
             limits:
               cpu: 256m
-              memory: 512Mi
+              memory: 64Mi
             requests:
               cpu: 256m
-              memory: 300Mi
+              memory: 32Mi
         # - name: cloudwatch-agent
         #   image: amazon/cloudwatch-agent:latest
         #   imagePullPolicy: Always
@@ -429,4 +429,28 @@ spec:
               cpu: 1024m
               memory: 1024Mi
         
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vegeta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vegeta
+  template:
+    metadata:
+      labels:
+        app: vegeta
+      annotations:
+        appmesh.k8s.aws/sidecarInjectorWebhook: disabled
+    spec:
+      containers:
+      - args:
+        image: peterevans/vegeta
+        name: vegeta
+        stdin: true
+        tty: true
+        command: ["/bin/sh"]
 ---
