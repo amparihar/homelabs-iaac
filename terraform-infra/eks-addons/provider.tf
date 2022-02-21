@@ -113,3 +113,9 @@ module "cwagent_prometheus" {
   region_name             = var.aws_regions[var.aws_region]
 }
 
+module "gatekeeper" {
+  source                  = "./modules/open-policy-agent"
+  enabled                 = var.app_opa_enabled
+  
+}
+

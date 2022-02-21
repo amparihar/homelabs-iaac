@@ -7,3 +7,4 @@ app_aws_efs_csi_driver_enabled=false
 
 app_prometheus_enabled=false
 app_cwagent_prometheus_enabled=false
+app_opa_enabled=false
