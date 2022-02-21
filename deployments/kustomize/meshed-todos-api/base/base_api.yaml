@@ -141,7 +141,7 @@ spec:
       #       name: cwagentconfig-sidecar
       containers:
         - name: group
-          image: aparihar/todos-group-microsvc:3.0
+          image: aparihar/todos-group-microsvc:4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096
@@ -179,6 +179,8 @@ spec:
               value: "progress.todos-api.svc.cluster.local"
             - name: PROGRESS_TRACKER_API_PORT
               value: "7096"
+            - name: HEALTH_CHECK_SLEEP_DURATION_MS
+              value: "5000"
           resources:
             limits:
               cpu: 256m
@@ -237,7 +239,7 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: task
-          image: aparihar/todos-task-microsvc-v2:latest
+          image: aparihar/todos-task-microsvc:3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6096
@@ -315,7 +317,7 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: progress
-          image: aparihar/todos-progress-tracker-microsvc-v2:latest
+          image: aparihar/todos-progress-tracker-microsvc:3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7096
@@ -430,6 +432,9 @@ spec:
               memory: 1024Mi
         
 ---
+##################################################################################################
+# HTTP load testing deployment to drill an api with a constant request rate
+##################################################################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
