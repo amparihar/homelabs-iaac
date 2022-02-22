@@ -180,7 +180,7 @@ spec:
             - name: PROGRESS_TRACKER_API_PORT
               value: "7096"
             - name: HEALTH_CHECK_SLEEP_DURATION_MS
-              value: "5000"
+              value: "1000"
           resources:
             limits:
               cpu: 256m

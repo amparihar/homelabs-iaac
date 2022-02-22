@@ -51,6 +51,15 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+      outlierDetection:
+        maxServerErrors: 5
+        maxEjectionPercent: 50
+        interval:
+          value: 10
+          unit: s
+        baseEjectionDuration:
+          value: 10
+          unit: s
   # backends:
   #   - virtualService:
   #       virtualServiceRef:
@@ -113,6 +122,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+      connectionPool:
+        http:
+          maxConnections: 50
+          maxPendingRequests: 5
   # backends:
   #   - virtualService:
   #       virtualServiceRef:
@@ -174,6 +187,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+      connectionPool:
+        http:
+          maxConnections: 50
+          maxPendingRequests: 5
   backends:
     - virtualService:
         virtualServiceRef:
@@ -238,6 +255,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 10000
+      connectionPool:
+        http:
+          maxConnections: 50
+          maxPendingRequests: 5
   backends:
     - virtualService:
         virtualServiceRef:
