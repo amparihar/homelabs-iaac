@@ -207,6 +207,90 @@ spec:
         #     - name: cwagentconfig
         #       mountPath: /etc/cwagentconfig
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: group-v5
+spec:
+  ports:
+    - port: 5096
+  selector:
+    app: group-v5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: group-v5
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: group-v5
+      version: v5
+  template:
+    metadata:
+      labels:
+        app: group-v5
+        version: v5
+      annotations:
+        prometheus.io/scrape: "true"
+        #prometheus.io/path: /api/group/metrics
+        prometheus.io/port: "5096"
+    spec:
+      serviceAccountName: todos-api-pod
+      # volumes:
+      #   - name: cwagentconfig
+      #     configMap:
+      #       name: cwagentconfig-sidecar
+      containers:
+        - name: group
+          image: aparihar/todos-group-microsvc:5.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5096
+          env:
+            - name: RDS_HOST
+              value: "database.todos-api.svc.cluster.local"
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_USERNAME
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-connection-secret
+                  key: RDS_PASSWORD
+            - name: RDS_CONN_POOL_SIZE
+              value: "2"
+            - name: JWT_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_TRACKER_API_HOST
+              value: "progress.todos-api.svc.cluster.local"
+            - name: PROGRESS_TRACKER_API_PORT
+              value: "7096"
+            
+          resources:
+            limits:
+              cpu: 256m
+              memory: 64Mi
+            requests:
+              cpu: 256m
+              memory: 32Mi
+---
 ##################################################################################################
 # task service
 ##################################################################################################

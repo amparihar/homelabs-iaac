@@ -203,6 +203,40 @@ spec:
       hostname: group.todos-api.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: group-v5-vn
+spec:
+  podSelector:
+    matchLabels:
+      app: group-v5
+  listeners:
+    - portMapping:
+        port: 5096
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: "/api/group/health-check"
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 10000
+      connectionPool:
+        http:
+          maxConnections: 50
+          maxPendingRequests: 5
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: progress-vs
+    # - virtualService:
+    #     virtualServiceRef:
+    #       name: database-vs
+  serviceDiscovery:
+    dns:
+      hostname: group-v5.todos-api.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
   name: group-vs
@@ -231,6 +265,19 @@ spec:
           weightedTargets:
             - virtualNodeRef:
                 name: group-vn
+              weight: 100
+    - name: green-route
+      httpRoute:
+        match:
+          prefix: /
+          headers:
+            - name: "green"
+              match:
+                exact: "true"
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: group-v5-vn
               weight: 100
 ---
 ##################################################################################################
