@@ -1,0 +1,23 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: group-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 5096
+        protocol: http
+  routes:
+    - name: green-route
+      priority: 1
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: group-v5-vn
+              weight: 100
+    
+---

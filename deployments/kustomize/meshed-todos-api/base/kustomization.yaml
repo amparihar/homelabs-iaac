@@ -5,4 +5,5 @@ resources:
   - ingress_gateway.yaml
   - base_api.yaml
   - meshed_api.yaml
+  
   - external_secrets.yaml

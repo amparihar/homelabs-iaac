@@ -267,20 +267,20 @@ spec:
             - virtualNodeRef:
                 name: group-vn
               weight: 100
-    - name: green-route
-      priority: 0
-      httpRoute:
-        match:
-          prefix: /
-          headers:
-            - name: "green"
-              match:
-                exact: "true"
-        action:
-          weightedTargets:
-            - virtualNodeRef:
-                name: group-v5-vn
-              weight: 100
+    # - name: green-route
+    #   priority: 0
+    #   httpRoute:
+    #     match:
+    #       prefix: /
+    #       headers:
+    #         - name: "green"
+    #           match:
+    #             exact: "true"
+    #     action:
+    #       weightedTargets:
+    #         - virtualNodeRef:
+    #             name: group-v5-vn
+    #           weight: 100
 ---
 ##################################################################################################
 # task service
