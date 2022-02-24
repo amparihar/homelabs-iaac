@@ -258,6 +258,7 @@ spec:
         protocol: http
   routes:
     - name: index-route
+      priority: 1
       httpRoute:
         match:
           prefix: /
@@ -267,6 +268,7 @@ spec:
                 name: group-vn
               weight: 100
     - name: green-route
+      priority: 0
       httpRoute:
         match:
           prefix: /

@@ -48,8 +48,8 @@ First, delete the K8s resources followed by the EKS Cluster
 
 ### DELETE add-ons
 cd eks-addons
-terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> 
+terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> -auto-approve
 
 ### DELETE eks
 cd eks
-terraform destroy -var-file=<FILENAME>
+terraform destroy -var-file=<FILENAME> -auto-approve
