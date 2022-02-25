@@ -65,6 +65,9 @@ spec:
   #       virtualServiceRef:
   #         name: database-vs
   serviceDiscovery:
+    # awsCloudMap:
+    #   namespaceName: 
+    #   serviceName: progress
     dns:
       hostname: progress.todos-api.svc.cluster.local
 ---

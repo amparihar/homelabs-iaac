@@ -69,8 +69,8 @@ module "cloud_map" {
   enabled                 = var.app_app_mesh_service_discovery_enabled
 }
 
-output "database_fqdn" {
-  value = module.cloud_map.database_fqdn
+output "cloudmap_namespace_name" {
+  value = module.cloud_map.namespace_name
 }
 
 module "app_mesh_controller" {
