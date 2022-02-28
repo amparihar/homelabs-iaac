@@ -66,7 +66,7 @@ spec:
   #         name: database-vs
   serviceDiscovery:
     # awsCloudMap:
-    #   namespaceName: 
+    #   namespaceName: homelabs.non-prod.todos-api.pvt.local 
     #   serviceName: progress
     dns:
       hostname: progress.todos-api.svc.cluster.local
