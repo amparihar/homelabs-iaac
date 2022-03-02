@@ -183,6 +183,11 @@ spec:
     - portMapping:
         port: 5096
         protocol: http
+      timeout:
+        http:
+          perRequest:
+            unit: s
+            value: 15
       healthCheck:
         protocol: http
         path: "/api/group/health-check"
@@ -265,6 +270,10 @@ spec:
       httpRoute:
         match:
           prefix: /
+        timeout:          
+          perRequest:
+            unit: s
+            value: 15
         action:
           weightedTargets:
             - virtualNodeRef:
