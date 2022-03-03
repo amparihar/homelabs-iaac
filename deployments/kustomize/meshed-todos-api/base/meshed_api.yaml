@@ -44,6 +44,11 @@ spec:
     - portMapping:
         port: 7096
         protocol: http
+      timeout:
+        http:
+          perRequest:
+            unit: s
+            value: 20
       healthCheck:
         protocol: http
         path: "/api/progress/health-check"
@@ -81,27 +86,31 @@ spec:
     
     virtualNode:
       virtualNodeRef:
-        name: progress-vn
-#---
-# apiVersion: appmesh.k8s.aws/v1beta2
-# kind: VirtualRouter
-# metadata:
-#   name: progress-vr
-# spec:
-#   listeners:
-#     - portMapping:
-#         port: 7096
-#         protocol: http
-#   routes:
-#     - name: index-route
-#       httpRoute:
-#         match:
-#           prefix: /
-#         action:
-#           weightedTargets:
-#             - virtualNodeRef:
-#                 name: progress-vn
-#               weight: 100
+        name: progress-vr
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: progress-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 7096
+        protocol: http
+  routes:
+    - name: index-route
+      httpRoute:
+        match:
+          prefix: /
+        timeout:          
+          perRequest:
+            unit: s
+            value: 20
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: progress-vn
+              weight: 100
 ---
 ##################################################################################################
 # user 
@@ -187,7 +196,7 @@ spec:
         http:
           perRequest:
             unit: s
-            value: 15
+            value: 20
       healthCheck:
         protocol: http
         path: "/api/group/health-check"
@@ -273,7 +282,7 @@ spec:
         timeout:          
           perRequest:
             unit: s
-            value: 15
+            value: 20
         action:
           weightedTargets:
             - virtualNodeRef:

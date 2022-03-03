@@ -156,7 +156,7 @@ module "observability_fargate_profile" {
   subnet_ids             = module.vpc.private_subnet_ids
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
   selectors = [
-                { namespace = "aws-observability" },
+                # { namespace = "aws-observability" },
                 { namespace = "prometheus" },
                 { namespace = "amazon-cloudwatch" }
               ]

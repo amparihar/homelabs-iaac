@@ -141,7 +141,7 @@ spec:
       #       name: cwagentconfig-sidecar
       containers:
         - name: group
-          image: aparihar/todos-group-microsvc:4.1
+          image: aparihar/todos-group-microsvc:4.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096
@@ -181,7 +181,7 @@ spec:
               value: "7096"
             - name: HEALTH_CHECK_SLEEP_DURATION_MS
               value: "0"
-            - name: SAVE_SLEEP_DURATION_MS
+            - name: LIST_GROUPS_SLEEP_DURATION_MS
               value: "0"
           resources:
             limits:
@@ -403,7 +403,7 @@ spec:
       serviceAccountName: todos-api-pod
       containers:
         - name: progress
-          image: aparihar/todos-progress-tracker-microsvc:3.0
+          image: aparihar/todos-progress-tracker-microsvc:3.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7096
@@ -437,6 +437,8 @@ spec:
                 secretKeyRef:
                   name: auth-secret
                   key: JWT_ACCESS_TOKEN
+            - name: PROGRESS_GROUPS_SLEEP_DURATION_MS
+              value: "0"
           resources:
             limits:
               cpu: 512m
