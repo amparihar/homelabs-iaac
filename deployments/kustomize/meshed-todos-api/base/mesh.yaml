@@ -5,7 +5,7 @@ metadata:
   name: todos-api-service-mesh
 spec:
   egressFilter:
-    type: "ALLOW_ALL"
+    type: "DROP_ALL"
   namespaceSelector:
     matchLabels:
       mesh: todos-api-mesh
