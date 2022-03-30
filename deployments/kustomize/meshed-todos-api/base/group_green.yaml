@@ -14,10 +14,10 @@ spec:
       httpRoute:
         match:
           prefix: /
-          # headers:
-          #   - name: "green"
-          #     match:
-          #       exact: "true"
+          headers:
+            - name: "green"
+              match:
+                exact: "true"
         action:
           weightedTargets:
             - virtualNodeRef:
