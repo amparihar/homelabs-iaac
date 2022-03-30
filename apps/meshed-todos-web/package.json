@@ -28,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "aws s3 cp ./build s3://meshed.todos.web --recursive --region us-east-2"
   },
   "eslintConfig": {
     "extends": "react-app"
