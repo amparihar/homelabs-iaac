@@ -70,3 +70,6 @@ variable "app_cwagent_prometheus_enabled" {
 variable "app_opa_enabled" {
   type = bool
 }
+variable "app_cert_manager_enabled" {
+  type= bool
+}

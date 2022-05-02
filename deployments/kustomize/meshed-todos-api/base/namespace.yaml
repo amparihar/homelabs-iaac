@@ -7,4 +7,5 @@ metadata:
     mesh: todos-api-mesh
     gateway: ingress-gw
     appmesh.k8s.aws/sidecarInjectorWebhook: enabled
+    elbv2.k8s.aws/pod-readiness-gate-inject: enabled
 ---

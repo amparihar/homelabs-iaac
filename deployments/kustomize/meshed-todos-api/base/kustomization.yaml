@@ -7,3 +7,4 @@ resources:
   - meshed_api.yaml
   
   - external_secrets.yaml
+  - issuers.yaml
