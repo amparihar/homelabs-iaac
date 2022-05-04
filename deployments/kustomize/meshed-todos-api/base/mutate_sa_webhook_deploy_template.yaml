@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-sa
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: pod-sa
+  template:
+    metadata:
+        labels:
+            app: pod-sa
+    spec:
+    
+      containers:
+        - name: WEBHOOK_APP
+          image: aparihar/todos-pod-sa:1.0
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: certs
+              mountPath: /etc/tls/certs
+              readOnly: true
+          ports:
+            - containerPort: 4443
+              protocol: TCP
+      volumes:
+        - name: certs
+          secret:
+            secretName: server-cert 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod-sa
+spec:
+  type: ClusterIP
+  ports:
+    - name: 4443-tcp
+      protocol: TCP
+      port: 443
+      targetPort: 4443
+  selector:
+    app: pod-sa
