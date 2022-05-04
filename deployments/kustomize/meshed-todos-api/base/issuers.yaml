@@ -1,25 +1,74 @@
 ---
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
-  name: selfsigned-issuer
+  name: ca-root-issuer
 spec:
   selfSigned: {}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: svc-cluster-local-ca
-  
+  name: ca-root
 spec:
   isCA: true
-  commonName: svc-cluster-local-ca
-  secretName: svc-cluster-local-ca-tls
+  commonName: ca-root-cert
+  secretName: ca-root-cert
   privateKey:
-    algorithm: ECDSA
-    size: 256
+    algorithm: RSA
+    size: 2048
   issuerRef:
-    name: selfsigned-issuer
-    kind: ClusterIssuer
+    name: ca-root-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ca-private-issuer
+spec:
+  ca:
+    secretName: ca-root-cert
+---
+# Webhook Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: server-cert
+spec:
+  isCA: false
+  duration: 2160h
+  renewBefore: 180h
+  dnsNames:
+    - mutate-sa.todos-api.svc.cluster.local
+  commonName: server-cert
+  secretName: server-cert
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    name: ca-private-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+# K8s API server Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: client-cert
+spec:
+  isCA: false
+  duration: 2160h
+  renewBefore: 180h
+  dnsNames:
+    - pod-sa.mytodos.com
+  commonName: client-cert
+  secretName: client-cert
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    name: ca-private-issuer
+    kind: Issuer
     group: cert-manager.io
 ---

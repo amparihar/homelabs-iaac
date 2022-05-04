@@ -1,0 +1,14 @@
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+    name: pod-sa
+webhooks:
+    - name: pod-sa.mytodos.com
+      clientConfig:
+        service:
+            namespace: todos-api
+            name: mutate-sa
+            path: /mutate
+    
+---
