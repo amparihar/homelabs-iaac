@@ -13,10 +13,12 @@ spec:
     metadata:
         labels:
             app: pod-sa
+        annotations:
+          appmesh.k8s.aws/sidecarInjectorWebhook: disabled
     spec:
     
       containers:
-        - name: WEBHOOK_APP
+        - name: pod-sa
           image: aparihar/todos-pod-sa:1.0
           imagePullPolicy: Always
           volumeMounts:

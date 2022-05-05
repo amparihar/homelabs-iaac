@@ -1,19 +1,19 @@
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-    name: pod-sa
+    name: pod-sa-webhook
     annotations:
         cert-manager.io/inject-ca-from: todos-api/client-cert
 webhooks:
-    - name: pod-sa.mytodos.com
+    - name: pod-sa-webhook.mytodos.com
       sideEffects: None
-      admissionReviewVersions: ["v1", "v1beta1"]
+      admissionReviewVersions: ["v1"]
       matchPolicy: Equivalent
-      faliurePolicy: Fail
+      
       namespaceSelector:
         matchLabels:
-            mutate-sa: true
+           pod-sa: enabled
       rules:
         - operations: ["CREATE", "UPDATE"]
           apiGroups: [""]

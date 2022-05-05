@@ -40,7 +40,7 @@ spec:
   duration: 2160h
   renewBefore: 180h
   dnsNames:
-    - mutate-sa.todos-api.svc.cluster.local
+    - pod-sa.todos-api.svc.cluster.local
   commonName: server-cert
   secretName: server-cert
   privateKey:
@@ -61,7 +61,7 @@ spec:
   duration: 2160h
   renewBefore: 180h
   dnsNames:
-    - pod-sa.mytodos.com
+    - pod-sa-webhook.mytodos.com
   commonName: client-cert
   secretName: client-cert
   privateKey:

@@ -24,6 +24,12 @@ terraform validate
 terraform plan -out <FILENAME1> -var-file=<FILENAME>
 terraform apply <FILENAME1>
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+aws eks update-kubeconfig --name meshed-todos-api-kluster
+kubectl patch deployment coredns -n kube-system --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
+kubectl config set-context --current --namespace=todos-api
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 2. Create eks addon resource
 Change into the eks-addons directory and create the resources after EKS Cluster is created successfully as above.
 
@@ -49,6 +55,10 @@ First, delete the K8s resources followed by the EKS Cluster
 ### DELETE add-ons
 cd eks-addons
 terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> -auto-approve
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+kubectl annotate deployment.apps/coredns -n kube-system eks.amazonaws.com/compute-type="ec2"
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ### DELETE eks
 cd eks

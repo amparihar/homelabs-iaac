@@ -3,8 +3,12 @@ resources:
   - mesh.yaml
   - service_account.yaml
   - ingress_gateway.yaml
-  - base_api.yaml
-  - meshed_api.yaml
   
   - external_secrets.yaml
+  
   - issuers.yaml
+  - pod_sa_webhook_deploy_template.yaml
+  - pod_sa_webhook_conf_template.yaml
+  
+  - base_api.yaml
+  - meshed_api.yaml

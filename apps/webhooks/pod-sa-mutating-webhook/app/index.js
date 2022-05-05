@@ -1,12 +1,11 @@
 const fs = require('fs')
 const express = require('express')
-const bodyParser = require('body-parser')
 const https = require('https')
 //
 const mutate = require('./mutate')
 //
 const app = express()
-app.use(bodyParser.json())
+app.use(express.json())
 //
 app.post('/mutate', (req, res, next) => {
     let admReq = req.body.request
@@ -14,7 +13,8 @@ app.post('/mutate', (req, res, next) => {
     mutate.mutate(req.body, (err, resp) => {
         if (err) {
             res.status(500).send({})
-        } else {
+        }
+        else {
             res.type('application/json')
             res.status(200).send({
                 kind: req.body.kind,
