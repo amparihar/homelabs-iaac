@@ -65,6 +65,12 @@ spec:
         baseEjectionDuration:
           value: 10
           unit: s
+      # tls:
+      #   mode: STRICT
+      #   certificate:
+      #     file:
+      #       certificateChain: /etc/tls/certs/tls.crt
+      #       privateKey: /etc/tls/certs/tls.key
   # backends:
   #   - virtualService:
   #       virtualServiceRef:
@@ -138,6 +144,12 @@ spec:
         http:
           maxConnections: 50
           maxPendingRequests: 5
+      # tls:
+      #   mode: STRICT
+      #   certificate:
+      #     file:
+      #       certificateChain: /etc/tls/certs/tls.crt
+      #       privateKey: /etc/tls/certs/tls.key
   # backends:
   #   - virtualService:
   #       virtualServiceRef:
@@ -208,6 +220,12 @@ spec:
         http:
           maxConnections: 50
           maxPendingRequests: 5
+      # tls:
+      #   mode: STRICT
+      #   certificate:
+      #     file:
+      #       certificateChain: /etc/tls/certs/tls.crt
+      #       privateKey: /etc/tls/certs/tls.key
   backends:
     - virtualService:
         virtualServiceRef:
@@ -242,6 +260,12 @@ spec:
         http:
           maxConnections: 50
           maxPendingRequests: 5
+      # tls:
+      #   mode: STRICT
+      #   certificate:
+      #     file:
+      #       certificateChain: /etc/tls/certs/tls.crt
+      #       privateKey: /etc/tls/certs/tls.key
   backends:
     - virtualService:
         virtualServiceRef:
@@ -329,6 +353,12 @@ spec:
         http:
           maxConnections: 50
           maxPendingRequests: 5
+      # tls:
+      #   mode: STRICT
+      #   certificate:
+      #     file:
+      #       certificateChain: /etc/tls/certs/tls.crt
+      #       privateKey: /etc/tls/certs/tls.key
   backends:
     - virtualService:
         virtualServiceRef:

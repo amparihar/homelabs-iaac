@@ -25,7 +25,7 @@ terraform plan -out <FILENAME1> -var-file=<FILENAME>
 terraform apply <FILENAME1>
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-aws eks update-kubeconfig --name meshed-todos-api-kluster
+aws eks update-kubeconfig --name eks-meshed-todos-api
 kubectl patch deployment coredns -n kube-system --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
 kubectl config set-context --current --namespace=todos-api
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -44,7 +44,7 @@ terraform apply <FILENAME2>
 *******************************
 
 3. Deployment
-cd ../../deployment/kustomize/meshed-todos-api/overlays
+cd ../../deployments/kustomize/meshed-todos-api/overlays/
 kubectl apply -k stateless/
 
 4. kubectl delete -k stateless/

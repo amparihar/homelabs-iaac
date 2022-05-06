@@ -40,6 +40,8 @@ spec:
       labels:
         app: user
         version: v1
+      # annotations:
+      #   appmesh.k8s.aws/secretMounts: user-svc-cert:/etc/tls/certs
       
     spec:
       serviceAccountName: todos-api-pod
@@ -58,6 +60,7 @@ spec:
             httpGet:
               path: /api/user/health-check
               port: 4096
+              scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
           imagePullPolicy: IfNotPresent
@@ -133,6 +136,7 @@ spec:
         prometheus.io/scrape: "true"
         #prometheus.io/path: /api/group/metrics
         prometheus.io/port: "5096"
+        # appmesh.k8s.aws/secretMounts: group-svc-cert:/etc/tls/certs
     spec:
       serviceAccountName: todos-api-pod
       # volumes:
@@ -238,6 +242,7 @@ spec:
         prometheus.io/scrape: "true"
         #prometheus.io/path: /api/group/metrics
         prometheus.io/port: "5096"
+        # appmesh.k8s.aws/secretMounts: group-svc-cert:/etc/tls/certs
     spec:
       serviceAccountName: todos-api-pod
       # volumes:
@@ -321,6 +326,8 @@ spec:
       labels:
         app: task
         version: v1
+      # annotations:
+      #   appmesh.k8s.aws/secretMounts: task-svc-cert:/etc/tls/certs
     spec:
       serviceAccountName: todos-api-pod
       containers:
@@ -399,6 +406,8 @@ spec:
       labels:
         app: progress
         version: v1
+      # annotations:
+      #   appmesh.k8s.aws/secretMounts: progress-svc-cert:/etc/tls/certs
     spec:
       serviceAccountName: todos-api-pod
       containers:
