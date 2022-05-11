@@ -9,7 +9,7 @@ spec:
   duration: 2160h
   renewBefore: 180h
   dnsNames:
-    
+    - ingress-vgw.todos-api.svc.cluster.local
   commonName: ingress-gw-cert
   secretName: ingress-gw-cert
   privateKey:

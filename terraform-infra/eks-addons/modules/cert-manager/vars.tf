@@ -48,7 +48,7 @@ variable "awspca_helm_release_name" {
 
 variable "awspca_helm_chart_name" {
   type        = string
-  default     = "awspca"
+  default     = "aws-privateca-issuer"
   description = "Helm chart name"
 }
 
@@ -65,7 +65,7 @@ variable "awspca_helm_repo_url" {
 }
 variable "awspca_namespace" {
   type        = string
-  default     = "aws-private-ca-issuer"
+  default     = "aws-pca-issuer"
   description = "Helm chart namespace"
 }
 variable "awspca_create_namespace" {

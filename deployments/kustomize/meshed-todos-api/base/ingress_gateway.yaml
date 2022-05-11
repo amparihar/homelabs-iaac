@@ -5,7 +5,7 @@
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualGateway
 metadata:
-  name: ingress-gw
+  name: ingress-vgw
 spec:
   namespaceSelector:
     matchLabels:

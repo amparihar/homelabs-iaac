@@ -132,7 +132,7 @@ module "core_fargate_profile" {
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
   selectors = [
                 { namespace = "kube-system" },
-                { namespace = "kubernetes-dashboard" },
+                { namespace = "aws-pca-issuer" },
                 { namespace = "appmesh-system" },
                 { namespace = "external-secrets" },
                 { namespace = "cert-manager" }
@@ -158,6 +158,7 @@ module "observability_fargate_profile" {
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
   selectors = [
                 # { namespace = "aws-observability" },
+                { namespace = "kubernetes-dashboard" },
                 { namespace = "prometheus" },
                 { namespace = "amazon-cloudwatch" }
               ]
