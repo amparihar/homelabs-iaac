@@ -121,6 +121,8 @@ module "gatekeeper" {
 
 module "cert_manager" {
   source                  = "./modules/cert-manager"
-  enabled                 = var.app_cert_manager_enabled
+  cm_enabled                 = var.app_cert_manager_enabled
+  irsa_assume_role_policy = module.irsa.assume_role_policy
+  region_id               = var.aws_regions[var.aws_region]
 }
 
