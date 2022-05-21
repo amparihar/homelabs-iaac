@@ -8,9 +8,10 @@ resources:
   
   - issuers.yaml
   - webhook_certs.yaml
-#   - mesh_mtls_certs.yaml
+
   - pod_sa_webhook_deploy_template.yaml
   - pod_sa_webhook_conf_template.yaml
   
   - base_api.yaml
   - meshed_api.yaml
+#   - hpa.yaml

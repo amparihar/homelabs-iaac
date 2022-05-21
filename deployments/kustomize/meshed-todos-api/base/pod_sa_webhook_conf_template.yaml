@@ -13,7 +13,7 @@ webhooks:
       
       namespaceSelector:
         matchLabels:
-           pod-sa: enabled
+           pod-sa-webhook: enabled
       rules:
         - operations: ["CREATE", "UPDATE"]
           apiGroups: [""]

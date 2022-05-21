@@ -145,7 +145,7 @@ spec:
       #       name: cwagentconfig-sidecar
       containers:
         - name: group
-          image: aparihar/todos-group-microsvc:4.3
+          image: aparihar/todos-group-microsvc:4.4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5096

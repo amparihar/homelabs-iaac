@@ -44,11 +44,11 @@ spec:
     - portMapping:
         port: 7096
         protocol: http
-      timeout:
-        http:
-          perRequest:
-            unit: s
-            value: 20
+      # timeout:
+      #   http:
+      #     perRequest:
+      #       unit: s
+      #       value: 20
       healthCheck:
         protocol: http
         path: "/api/progress/health-check"
@@ -108,10 +108,10 @@ spec:
       httpRoute:
         match:
           prefix: /
-        timeout:          
-          perRequest:
-            unit: s
-            value: 20
+        # timeout:          
+        #   perRequest:
+        #     unit: s
+        #     value: 20
         action:
           weightedTargets:
             - virtualNodeRef:
