@@ -25,7 +25,8 @@ resource "helm_release" "aws_efs_csi_driver" {
   repository        = var.helm_repo_url
   chart             = var.helm_chart_name
  
-  version           = "2.2.2"
+  # version           = "2.2.2"
+  version           = "2.4.6"
   namespace         = var.namespace
   create_namespace  = var.create_namespace
   

@@ -35,7 +35,8 @@ variable "cluster_name" {
 }
 variable "k8s_version" {
   description = "k8s cluster version"
-  default     = "1.20"
+  # default     = "1.20"
+  default     = "1.25"
   type        = string
 }
 variable "private_networking" {

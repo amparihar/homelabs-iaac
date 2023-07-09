@@ -25,6 +25,16 @@ resource "kubernetes_service_account" "kubernetes_external_secrets" {
   }
 }
 
+resource "kubernetes_secret" "kubernetes_external_secrets" {
+  count = (var.kubernetes_external_secrets_enabled) ? 1 : 0
+  metadata {
+    name      = "kubernetes-external-secrets-secret"
+    namespace = var.kubernetes_external_secrets_namespace
+    annotations = {
+      "kubernetes.io/service-account.name" = "kubernetes-external-secrets"
+    }
+}
+
 resource "helm_release" "kubernetes_external_secrets" {
   count            = var.kubernetes_external_secrets_enabled ? 1 : 0
   name             = var.kubernetes_external_secrets_helm_release_name

@@ -6,11 +6,12 @@ Download and install the latest terraform binary for your operating system from 
 
 *******************************
 Versions
-K8s: 1.20
-Helm chart version for aws load balancer controller : 1.3.2
-Helm chart version for app mesh controller : 1.4.4
+K8s: 1.20 ~ 1.25
+Helm chart version for aws EFS CSI : 2.2.2 ~ 2.4.6
+Helm chart version for aws load balancer controller : 1.3.2 ~ 1.5.4
+Helm chart version for app mesh controller : 1.4.4 ~ 1.12.1
 Helm chart for kubernetes dashboard : 3.0.1 (needs upgrade)
-Helm chart for kubernetes external secrets : 8.5.0
+Helm chart for kubernetes external secrets : 8.5.0 ~ 8.5.5
 *******************************
 
 # Build and Test
@@ -23,6 +24,12 @@ terraform init
 terraform validate
 terraform plan -out <FILENAME1> -var-file=<FILENAME>
 terraform apply <FILENAME1>
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+To use the resulting configuration, you must have kubectl installed
+
+kubectl v1.23 is compatible with k8s version 1.25
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 aws eks update-kubeconfig --name eks-meshed-todos-api

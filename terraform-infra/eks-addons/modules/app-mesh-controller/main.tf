@@ -7,6 +7,7 @@ resource "kubernetes_namespace" "appmesh_controller" {
     name = var.appmesh_controller_namespace
   }
 }
+
 resource "kubernetes_service_account" "appmesh_controller" {
   count = var.appmesh_controller_enabled ? 1 : 0
   metadata {
@@ -20,6 +21,16 @@ resource "kubernetes_service_account" "appmesh_controller" {
       "app.kubernetes.io/name"      = "appmesh-controller"
     }
   }
+}
+
+resource "kubernetes_secret" "appmesh_controller" {
+count = var.appmesh_controller_enabled ? 1 : 0
+  metadata {
+    name      = "appmesh-controller-secret"
+    namespace = var.appmesh_controller_namespace
+    annotations = {
+      "kubernetes.io/service-account.name" = "appmesh-controller"
+    }
 }
 
 resource "helm_release" "app-mesh-controller" {

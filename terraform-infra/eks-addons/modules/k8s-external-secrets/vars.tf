@@ -33,7 +33,8 @@ variable "kubernetes_external_secrets_helm_repo_url" {
 }
 variable "kubernetes_external_secrets_helm_version" {
   type        = string
-  default     = "8.5.0"
+  # default     = "8.5.0"
+  default     = "8.5.5"
   description = "Heml version"
 }
 

@@ -31,6 +31,15 @@ resource "kubernetes_service_account" "load_balancer_controller" {
   }
 }
 
+resource "kubernetes_secret" "load_balancer_controller" {
+  metadata {
+    name      = "load-balancer-controller-secret"
+    namespace = "kube-system"
+    annotations = {
+      "kubernetes.io/service-account.name" = "aws-load-balancer-controller"
+    }
+}
+
 # Create Cluster Role for Service Account
 resource "kubernetes_cluster_role" "load_balancer_controller" {
   count = 0
@@ -82,7 +91,8 @@ resource "helm_release" "load_balancer_controller" {
   namespace        = "kube-system"
   create_namespace = false
   skip_crds        = false
-  version          = "1.3.2"
+  # version          = "1.3.2"
+  version          = "1.5.4"
 
   set {
     name  = "clusterName"
