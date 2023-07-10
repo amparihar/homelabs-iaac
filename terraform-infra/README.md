@@ -34,7 +34,7 @@ kubectl v1.23 is compatible with k8s version 1.25
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 aws eks update-kubeconfig --name eks-meshed-todos-api
 kubectl patch deployment coredns -n kube-system --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
-kubectl config set-context --current --namespace=todos-api
+(optional) kubectl config set-context --current --namespace=todos-api
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 2. Create eks addon resource
@@ -51,12 +51,17 @@ terraform apply <FILENAME2>
 *******************************
 
 3. Deployment
-cd ../../deployments/kustomize/meshed-todos-api/overlays/
-kubectl apply -k stateless/
+    3.1 Stateless
+        cd ../../deployments/kustomize/meshed-todos-api/overlays/
+        kubectl apply -k stateless/
+        .
+        .
+        kubectl delete -k stateless/
+    3.2 Stateful
+        
 
-4. kubectl delete -k stateless/
 
-5. DELETING the Cluster
+4. DELETING the Cluster
 First, delete the K8s resources followed by the EKS Cluster
 
 ### DELETE add-ons
