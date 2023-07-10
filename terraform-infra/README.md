@@ -43,23 +43,32 @@ Change into the eks-addons directory and create the resources after EKS Cluster 
 cd eks-addons
 terraform init
 terraform validate
-terraform plan -out <FILENAME2> -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> 
+terraform plan -out <FILENAME2> -var=cluster_name=<CLUSTERNAME> -var=vpc_id=vpc-<ID> 
 terraform apply <FILENAME2>
 
 *******************************
-####  UPDATE "service_account.yaml" with the value of the output variable named "appmesh_controller_sa_arn" 
+####  UPDATE "service_account.yaml" with the value of the output variable named "service_account_role_arn" 
 *******************************
 
 3. Deployment
     3.1 Stateless
-        cd ../../deployments/kustomize/meshed-todos-api/overlays/
-        kubectl apply -k stateless/
+        cd ../../deployments/kustomize/meshed-todos-api/
+        kubectl apply -k overlays/stateless/
         .
         .
-        kubectl delete -k stateless/
+        kubectl delete -k overlays/stateless/
     3.2 Stateful
-        
-
+        kubectl get csidriver
+        kubectl get po -n appmesh-system
+        cd ../../deployments/kustomize/meshed-todos-api
+            kubectl apply -f create_storage.yaml
+            kubectl apply -k overlays/statefull/
+        kubectl get storageclass
+        kubectl get po -n todos-api
+        .
+        .
+        kubectl delete -k overlays/statefull/
+        kubectl delete -f create_storage.yaml
 
 4. DELETING the Cluster
 First, delete the K8s resources followed by the EKS Cluster

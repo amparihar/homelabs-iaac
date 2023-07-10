@@ -21,16 +21,20 @@ resource "kubernetes_service_account" "appmesh_controller" {
       "app.kubernetes.io/name"      = "appmesh-controller"
     }
   }
+  secret {
+    name = "${kubernetes_secret.appmesh_controller[count.index].metadata.0.name}"
+  }
 }
 
 resource "kubernetes_secret" "appmesh_controller" {
-count = var.appmesh_controller_enabled ? 1 : 0
+  count = var.appmesh_controller_enabled ? 1 : 0
   metadata {
     name      = "appmesh-controller-secret"
     namespace = var.appmesh_controller_namespace
-    annotations = {
-      "kubernetes.io/service-account.name" = "appmesh-controller"
-    }
+    # annotations = {
+    #   "kubernetes.io/service-account.name" = "appmesh-controller"
+    # }
+  }
 }
 
 resource "helm_release" "app-mesh-controller" {
@@ -69,7 +73,7 @@ resource "helm_release" "app-mesh-controller" {
 
   set {
     name  = "image.repository"
-    value = "602401143452.dkr.ecr.${var.region_id}.amazonaws.com/amazon/appmesh-controller"
+    value = "840364872350.dkr.ecr.${var.region_id}.amazonaws.com/amazon/appmesh-controller"
   }
 
   set {

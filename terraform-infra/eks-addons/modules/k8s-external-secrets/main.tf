@@ -23,6 +23,9 @@ resource "kubernetes_service_account" "kubernetes_external_secrets" {
       "app.kubernetes.io/name"      = "kubernetes-external-secrets"
     }
   }
+  secret {
+    name = "${kubernetes_secret.kubernetes_external_secrets[count.index].metadata.0.name}"
+  }
 }
 
 resource "kubernetes_secret" "kubernetes_external_secrets" {
@@ -30,9 +33,10 @@ resource "kubernetes_secret" "kubernetes_external_secrets" {
   metadata {
     name      = "kubernetes-external-secrets-secret"
     namespace = var.kubernetes_external_secrets_namespace
-    annotations = {
-      "kubernetes.io/service-account.name" = "kubernetes-external-secrets"
-    }
+    # annotations = {
+    #   "kubernetes.io/service-account.name" = "kubernetes-external-secrets"
+    # }
+  }
 }
 
 resource "helm_release" "kubernetes_external_secrets" {

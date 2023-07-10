@@ -29,15 +29,19 @@ resource "kubernetes_service_account" "load_balancer_controller" {
       "app.kubernetes.io/name"      = "aws-load-balancer-controller"
     }
   }
+  secret {
+    name = "${kubernetes_secret.load_balancer_controller.metadata.0.name}"
+  }
 }
 
 resource "kubernetes_secret" "load_balancer_controller" {
   metadata {
     name      = "load-balancer-controller-secret"
     namespace = "kube-system"
-    annotations = {
-      "kubernetes.io/service-account.name" = "aws-load-balancer-controller"
-    }
+    # annotations = {
+    #   "kubernetes.io/service-account.name" = "aws-load-balancer-controller"
+    # }
+  }
 }
 
 # Create Cluster Role for Service Account
