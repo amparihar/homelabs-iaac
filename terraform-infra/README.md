@@ -40,7 +40,7 @@ kubectl patch deployment coredns -n kube-system --type json -p='[{"op": "remove"
 2. Create eks addon resource
 Change into the eks-addons directory and create the resources after EKS Cluster is created successfully as above.
 
-cd eks-addons
+cd ../eks-addons
 terraform init
 terraform validate
 terraform plan -out <FILENAME2> -var=cluster_name=<CLUSTERNAME> -var=vpc_id=vpc-<ID> 
