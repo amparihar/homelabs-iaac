@@ -59,12 +59,17 @@ terraform apply <FILENAME2>
         kubectl delete -k overlays/stateless/
     3.2 Stateful
         kubectl get csidriver
+        kubectl get po --all-namespaces
         kubectl get po -n appmesh-system
         cd ../../deployments/kustomize/meshed-todos-api
+            *********************************************************************************************
+            ####  UPDATE "create_storage.yaml" with the value of the output EFS file system id 
+            *********************************************************************************************
             kubectl apply -f create_storage.yaml
             kubectl apply -k overlays/statefull/
         kubectl get storageclass
         kubectl get po -n todos-api
+        kubectl exec -it <POD> -c <CONTAINER> /bin/bash -n <NS>
         .
         .
         kubectl delete -k overlays/statefull/
@@ -74,7 +79,7 @@ terraform apply <FILENAME2>
 First, delete the K8s resources followed by the EKS Cluster
 
 ### DELETE add-ons
-cd eks-addons
+cd ../../../terraform-infra/eks-addons/
 terraform destroy -var=cluster_name=<CLUSTERNAME> -var=vpc_id=<VPCID> -auto-approve
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -82,5 +87,16 @@ kubectl annotate deployment.apps/coredns -n kube-system eks.amazonaws.com/comput
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ### DELETE eks
-cd eks
+cd ../eks
 terraform destroy -var-file=<FILENAME> -auto-approve
+
+
+
+POD Restart
+-----------------
+1.) kubectl rollout restart
+    kubectl rollout restart deployment <deployment_name> -n <namespace>
+
+2.) kubectl scale
+    kubectl scale deployment <deployment name> -n <namespace> --replicas=0
+    kubectl scale deployment <deployment name> -n <namespace> --replicas=1
