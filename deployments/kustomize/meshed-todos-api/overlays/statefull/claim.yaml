@@ -8,6 +8,7 @@ metadata:
   name: todos-api-database-claim
 spec:
   storageClassName: kluster-sc
+  volumeName: kluster-pv
   accessModes:
     - ReadWriteMany
   resources:

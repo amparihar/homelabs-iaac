@@ -10,7 +10,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller_sa" {
   # policy = data.aws_iam_policy_document.aws_load_balancer_controller_sa_iam_policy.json
   
   # https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.3/docs/install/iam_policy.json
-  policy = "${file("iam-policy.json")}"
+  policy = "${file("${path.module}/iam-policy.json")}"
 }
 
 resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_sa" {

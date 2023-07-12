@@ -19,7 +19,7 @@ Helm chart for kubernetes external secrets : 8.5.0 ~ 8.5.5
 1. Create EKS Cluster
 Change into the eks directory and create the EKS cluster infrastructure.
 
-cd eks
+cd homelabs-iaac/terraform-infra/eks
 terraform init
 terraform validate
 terraform plan -out <FILENAME1> -var-file=<FILENAME>
@@ -69,7 +69,7 @@ terraform apply <FILENAME2>
             kubectl apply -k overlays/statefull/
         kubectl get storageclass
         kubectl get po -n todos-api
-        kubectl exec -it <POD> -c <CONTAINER> /bin/bash -n <NS>
+        kubectl exec -it <POD> -c <CONTAINER> /bin/bash -n <NAMESPACE>
         .
         .
         kubectl delete -k overlays/statefull/
@@ -96,6 +96,7 @@ POD Restart
 -----------------
 1.) kubectl rollout restart
     kubectl rollout restart deployment <deployment_name> -n <namespace>
+    (In cases of Issues) kubectl rollout undo deployment <deployment_name> -n <namespace>
 
 2.) kubectl scale
     kubectl scale deployment <deployment name> -n <namespace> --replicas=0
