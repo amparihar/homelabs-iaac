@@ -29,6 +29,10 @@ terraform apply <FILENAME1>
 To use the resulting configuration, you must have kubectl installed
 
 kubectl v1.23 is compatible with k8s version 1.25
+Installation
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.17/2023-05-11/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
