@@ -1,7 +1,7 @@
 apiVersion: microsvcs.homelabs.todosapi.com/v1
 kind: MicroSvc
 metadata:
-  name: user-svc
+  name: user-micro-svc
 spec:
   targetPort: 4096
   serviceName: user
