@@ -2,19 +2,19 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   # name must be in the form: <plural>.<group>
-  name: microsvcs.homelabs.todosapi.com
+  name: meshedsvcs.k8s.todosapi.com
 spec:
   # either Namespaced or Cluster
   scope: Namespaced
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
-    plural: microsvcs
-    singular: microsvc
-    kind: MicroSvc
+    plural: meshedsvcs
+    singular: meshedsvc
+    kind: MeshedSvc
     shortNames:
         - msvc
   # group name to use for REST API: /apis/<group>/<version>
-  group: homelabs.todosapi.com
+  group: k8s.todosapi.com
   # list of versions supported by this CustomResourceDefinition
   versions:
     - name: v1

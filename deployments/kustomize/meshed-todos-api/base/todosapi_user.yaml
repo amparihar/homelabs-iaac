@@ -1,7 +1,7 @@
-apiVersion: microsvcs.homelabs.todosapi.com/v1
-kind: MicroSvc
+apiVersion: k8s.todosapi.com/v1
+kind: MeshedSvc
 metadata:
-  name: user-micro-svc
+  name: meshed-user-svc
 spec:
   targetPort: 4096
   serviceName: user

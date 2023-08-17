@@ -1,0 +1,38 @@
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: meshedsvcs-controller
+spec:
+  generateSelector: true
+  parentResource:
+    apiVersion: k8s.todosapi.com/v1
+    resource: meshedsvcs
+  childResources:
+  - apiVersion: v1
+    resource: service
+    updateStrategy:
+      method: Recreate
+  - apiVersion: apps/v1
+    resource: deployment
+    updateStrategy:
+      method: Recreate
+  - apiVersion: appmesh.k8s.aws/v1beta2
+    resource: virtualnode
+    updateStrategy:
+      method: Recreate
+  - apiVersion: appmesh.k8s.aws/v1beta2
+    resource: virtualservice
+    updateStrategy:
+      method: Recreate
+  - apiVersion: appmesh.k8s.aws/v1beta2
+    resource: virtualrouter
+    updateStrategy:
+      method: Recreate
+  - apiVersion: appmesh.k8s.aws/v1beta2
+    resource: gatewayroute
+    updateStrategy:
+      method: Recreate
+  hooks:
+    sync:
+      webhook:
+        url: http://meshedsvcs-controller.todos-api:8001/sync
