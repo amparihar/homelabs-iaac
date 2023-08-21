@@ -15,10 +15,116 @@ app.post('/sync', (req, res, next) => {
     console.log(JSON.stringify(children));
 
     let desired_status = {
-        "pods": Object.keys(children["Pod.v1"]).length
+        "services" : Object.keys(children["Service.v1"]).length,
+        "deployments" : Object.keys(children["Deployment.apps/v1"]).length,
+        "virtualnodes" : Object.keys(children["VirtualNode.appmesh.k8s.aws/v1beta2"]).length,
+        "virtualservices" : Object.keys(children["VirtualService.appmesh.k8s.aws/v1beta2"]).length,
+        "virtualrouter" : Object.keys(children["VirtualRouter.appmesh.k8s.aws/v1beta2"]).length,
+        "gatewayroute" : Object.keys(children["GatewayRoute.appmesh.k8s.aws/v1beta2"]).length,
     };
+    
+    let name        = parent["spec"]["svcName"],
+        port        = parent["spec"]["targetPort"];
+    
 
-    let desired_pods = {};
+    let desired_pods = [
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "name": name
+            },
+            "spec": {
+                "ports": [{ "port": port }],
+                "selector": { "app": name }
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+              "name": name
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "matchLabels" : {
+                        "app": name
+                        "version" : "v1"
+                    }
+                },
+                "template" : {
+                    
+                }
+            }
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: user
+                  version: v1
+              template:
+                metadata:
+                  labels:
+                    app: user
+                    version: v1
+                 
+                spec:
+                  serviceAccountName: todos-api-pod
+                  containers:
+                    - name: user
+                      image: aparihar/todos-user-microsvc:3.0
+                      readinessProbe:
+                        httpGet:
+                          path: /api/user/health-check
+                          port: 4096
+                          scheme: HTTP
+                        initialDelaySeconds: 5
+                        periodSeconds: 10
+                      imagePullPolicy: IfNotPresent
+                      ports:
+                        - containerPort: 4096
+                      env:
+                        - name: RDS_HOST
+                          value: "database.todos-api.svc.cluster.local"
+                        - name: RDS_PORT
+                          valueFrom:
+                            secretKeyRef:
+                              name: database-connection-secret
+                              key: RDS_PORT
+                        - name: RDS_DB_NAME
+                          valueFrom:
+                            secretKeyRef:
+                              name: database-connection-secret
+                              key: RDS_DB_NAME
+                        - name: RDS_USERNAME
+                          valueFrom:
+                            secretKeyRef:
+                              name: database-connection-secret
+                              key: RDS_USERNAME
+                        - name: RDS_PASSWORD
+                          valueFrom:
+                            secretKeyRef:
+                              name: database-connection-secret
+                              key: RDS_PASSWORD
+                        - name: RDS_CONN_POOL_SIZE
+                          value: "2"
+                        - name: JWT_ACCESS_TOKEN
+                          valueFrom:
+                            secretKeyRef:
+                              name: auth-secret
+                              key: JWT_ACCESS_TOKEN
+                      resources:
+                        limits:
+                          cpu: 256m
+                          memory: 64Mi
+                        requests:
+                          cpu: 256m
+                          memory: 32Mi
+        }
+        
+    ];
+        
+    
 
     res.status(200).send({ "status": desired_status, "children": desired_pods });
 

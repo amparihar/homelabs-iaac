@@ -31,6 +31,6 @@ spec:
               properties:
                 targetPort:
                   type: integer
-                serviceName:
+                svcName:
                   type: string
   
