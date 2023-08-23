@@ -1,3 +1,7 @@
+# Configure git user name & email
+git config --global user.name "Your Name"
+git config --global user.email you@example.com
+
 # Introduction 
 A terraform module to create a managed Kubernetes cluster on AWS EKS(Fargate)
 
