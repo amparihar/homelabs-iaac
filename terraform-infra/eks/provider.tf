@@ -148,7 +148,7 @@ output "core_fargate_profile_status" {
   value = module.core_fargate_profile.status
 }
 
-module "observability_fargate_profile" {
+module "integration_fargate_profile" {
   source                 = "./fargate"
   app_name               = var.app_name
   stage_name             = var.stage_name
@@ -159,14 +159,15 @@ module "observability_fargate_profile" {
   selectors = [
                 # { namespace = "aws-observability" },
                 { namespace = "prometheus" },
-                { namespace = "amazon-cloudwatch" }
+                { namespace = "amazon-cloudwatch" },
+                { namespace = "gitlab-agent-k8s-connection-agent" }
               ]
 }
 
 output "observability_fargate_profile_id" {
-  value = module.observability_fargate_profile.id
+  value = module.integration_fargate_profile.id
 }
 
 output "observability_fargate_profile_status" {
-  value = module.observability_fargate_profile.status
+  value = module.integration_fargate_profile.status
 }
