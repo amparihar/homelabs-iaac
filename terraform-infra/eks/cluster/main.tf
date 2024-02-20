@@ -37,6 +37,26 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
   ]
 }
 
+resource "aws_eks_addon" "coredns" {
+  cluster_name                = aws_eks_cluster.main.name
+  addon_name                  = "coredns"
+  resolve_conflicts_on_create = "OVERWRITE"
+
+  configuration_values = jsonencode({
+    computeType = "Fargate"
+    resources = {
+      limits = {
+        cpu = "0.25"
+        memory = "256M"
+      }
+      requests = {
+        cpu = "0.25"
+        memory = "256M"
+      }
+    }
+  })
+}
+
 # # codeDNS patch
 # # https://docs.aws.amazon.com/eks/latest/userguide/fargate-getting-started.html#fargate-gs-coredns
 

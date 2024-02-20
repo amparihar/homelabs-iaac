@@ -152,7 +152,7 @@ module "integration_fargate_profile" {
   source                 = "./fargate"
   app_name               = var.app_name
   stage_name             = var.stage_name
-  profile_name           = "fp-observability"
+  profile_name           = "fp-integration"
   cluster_name           = module.cluster.eks_cluster_name
   subnet_ids             = module.vpc.private_subnet_ids
   pod_execution_role_arn = module.iam.eks_fargate_pod_execution_iam_role_arn
@@ -164,10 +164,10 @@ module "integration_fargate_profile" {
               ]
 }
 
-output "observability_fargate_profile_id" {
+output "integration_fargate_profile_id" {
   value = module.integration_fargate_profile.id
 }
 
-output "observability_fargate_profile_status" {
+output "integration_fargate_profile_status" {
   value = module.integration_fargate_profile.status
 }

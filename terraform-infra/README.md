@@ -8,7 +8,7 @@ A terraform module to create a managed Kubernetes cluster on AWS EKS(Fargate)
 # Getting Started
 Download and install the latest terraform binary for your operating system from https://terrform.io
 
-## Terraforn v1.7.0
+## Terraform v1.7.0
     curl -O https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip 
     sudo unzip terraform_1.7.0_linux_amd64.zip 
     sudo mv terraform /usr/local/bin 
